@@ -10,11 +10,16 @@ class App {
 	function draw_initial_data() {
 		$app_title = $this->config['app_title'] ?? DEF_APP_TITLE;
 		$welcome_message = $this->config['welcome_message'] ?? 'Welcome';
+		$categories = $this->config['categories'] ?? [];
+		$boards = $this->config['boards'] ?? [];
 	?>
 		<script>
 			var FLATCH = {
 				APP_TITLE: "<?= safe($app_title) ?>",
 				WELCOME_MESSAGE: "<?= safe($welcome_message) ?>",
+				PUBLISHED_DATE: "<?= safe($this->config['published_date']) ?>",
+				CATEGORIES: <?= json_encode($categories) ?>,
+				BOARDS: <?= json_encode($boards) ?>,
 			}
 		</script>
 	<?php

@@ -2,6 +2,7 @@ import * as nue from '../nue/nue.js'
 import * as i18n from '../i18n.js'
 import AppHeader from './AppHeader.js'
 import AppContent from './AppContent.js'
+import AppFooter from './AppFooter.js'
 
 export default class Root extends nue.Root {
 	constructor(mainModel) {
@@ -14,10 +15,17 @@ export default class Root extends nue.Root {
 		this.appContent = new AppContent(this.mainModel)
 		this.add(this.appContent)
 
+		this.appFooter = new AppFooter(this.mainModel)
+		this.add(this.appFooter)
+
 		window.addEventListener('popstate', ev => {
 			this.linkClick(ev)
 		})
 
+		this.parseLocation()
+	}
+
+	parseLocation () {
 		let params = new URLSearchParams(location.search)
 		this.mainModel.refRoute.value = params.get('path') || '/home'
 	}
@@ -25,7 +33,12 @@ export default class Root extends nue.Root {
 	receive (key, val) {
 		switch (key) {
 		case 'linkClick': this.linkClick(val); break
+		case 'clickBoardItem': this.clickBoardItem(val); break
 		}
+	}
+
+	clickBoardItem (ev) {
+		this.mainModel.refRoute.value = `/?path=/boards/${ev.slug}`	
 	}
 
 	linkClick (ev) {

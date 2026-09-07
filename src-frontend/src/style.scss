@@ -1,19 +1,52 @@
+$pad-y: 1rem;
+$pad-x: 1.618rem;
+$link-color: blue;
+$link-color-hover: red;
+$t-sec: 0.3s;
+
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 }
-body {
+html, body, #app, .root {
+	height: 100%;
 }
-.nue_link {
-	cursor: pointer;
-	text-decoration: underline;
-	transition: text-decoration .3s;
-}
-.nue_link:hover {
-	text-decoration: none;
+.root {
+	display: flex;
+	flex-direction: column;
 }
 .app-header {
 	display: flex;
 	justify-content: start;
+}
+.app-content {
+	border: 1px solid red;
+	flex: 1;
+}
+.link {
+	cursor: pointer;
+	color: $link-color;
+	text-decoration: underline;
+	transition: 
+		color $t-sec,
+		text-decoration $t-sec;
+}
+.link:hover {
+	color: $link-color-hover;
+	text-decoration: none;
+}
+.boards {
+	.list {
+		display: flex;
+		list-style: none;
+	}
+	.item {
+		margin-right: calc($pad-x*0.2);
+	}
+	.board-item {
+	}
+	.separate-item:before {
+		content: "/";
+	}
 }

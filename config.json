@@ -1,4 +1,14 @@
 {
 	"app_title": "My App",
-	"welcome_message": "My Appにようこそ！"
+	"welcome_message": "My Appにようこそ！",
+	"published_date": "2026-09-08",
+	"categories": [
+		["PC等", "pc"],
+		["生活", "life"]	
+	],
+	"boards": [
+		["プログラマー", "prog", "pc", {"desc": "プログラマ板です。"}],
+		["プログラム", "tech", "pc", {"desc": "プログラム板です。"}],
+		["生活全般", "kankon", "life", {"desc": "生活板です。"}]
+	]
 }

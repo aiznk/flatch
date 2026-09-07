@@ -9,10 +9,10 @@ export default class AppHeader extends nue.Div {
 		this.appTitle = new nue.H1('', { class: 'app-title' })
 		this.add(this.appTitle)
 
-		this.home = new nue.Link(i18n.home(), { path: '/home' }, '/?path=/home')
+		this.home = new nue.Link(i18n.home(), { path: '/home' }, '/?path=/home', { class: 'link' })
 		this.add(this.home)
 
-		this.boards = new nue.Link(i18n.boards(), { path: '/boards' }, '/?path=/boards')
+		this.boards = new nue.Link(i18n.boards(), { path: '/boards' }, '/?path=/boards', { class: 'link' })
 		this.add(this.boards)
 
 		this.mainModel.refAppTitle.onSet((_, appTitle) => {
