@@ -1,0 +1,19 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+body {
+}
+.nue_link {
+	cursor: pointer;
+	text-decoration: underline;
+	transition: text-decoration .3s;
+}
+.nue_link:hover {
+	text-decoration: none;
+}
+.app-header {
+	display: flex;
+	justify-content: start;
+}

@@ -3,14 +3,15 @@
   "version": "0.1.0",
   "main": "index.js",
   "scripts": {
-    "watch": "nodemon --watch src --exec \"npm run build\"",
-    "build": "esbuild src/index.js --bundle --outfile=../static/index.js"
+    "watch": "nodemon --ext js,scss,html --watch src --exec \"npm run build\"",
+    "build": "sass src/style.scss ../static/style.css && esbuild src/index.js --bundle --outfile=../static/index.js"
   },
   "author": "Aizawa Yuta",
   "license": "MIT",
   "description": "",
   "devDependencies": {
     "esbuild": "0.28.2",
-    "nodemon": "3.1.14"
+    "nodemon": "3.1.14",
+    "sass": "^1.104.0"
   }
 }
