@@ -15,20 +15,20 @@ export default class Root extends nue.Root {
 		this.add(this.appContent)
 
 		window.addEventListener('popstate', ev => {
-			this.mainModel.refRoute.value = ev.state.path
+			this.linkClick(ev)
 		})
 
-		this.linkClick()
+		let params = new URLSearchParams(location.search)
+		this.mainModel.refRoute.value = params.get('path') || '/home'
 	}
 
 	receive (key, val) {
 		switch (key) {
-		case 'linkClick': this.linkClick(); break
+		case 'linkClick': this.linkClick(val); break
 		}
 	}
 
-	linkClick () {
-		const params = new URLSearchParams(location.search)
-		this.mainModel.refRoute.value = params.get('path')
+	linkClick (ev) {
+		this.mainModel.refRoute.value = ev.state.path
 	}
 }
