@@ -1,8 +1,12 @@
 import * as nue from './nue/nue.js'
 import Root from './components/Root.js'
+import { MainModel } from './models.js'
 
-function main() {
-	let root = new Root()
+async function main() {
+	let mainModel = new MainModel()
+	await mainModel.initialLoad()
+
+	let root = new Root(mainModel)
 	root.mount('#app')
 }
 
