@@ -1,0 +1,16 @@
+{
+  "name": "flatch",
+  "version": "0.1.0",
+  "main": "index.js",
+  "scripts": {
+    "watch": "nodemon --watch src-frontend --exec \"npm run build\"",
+    "build": "esbuild index.js --bundle --outfile=../static/index.js"
+  },
+  "author": "Aizawa Yuta",
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "esbuild": "0.28.2",
+    "nodemon": "3.1.14"
+  }
+}
