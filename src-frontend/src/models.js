@@ -6,7 +6,6 @@ export class MainModel {
 	}
 
 	async initialLoad () {
-		const data = FLATCH.initialData
-		this.refAppTitle.value = data.appTitle
+		this.refAppTitle.value = FLATCH.APP_TITLE
 	}
 }

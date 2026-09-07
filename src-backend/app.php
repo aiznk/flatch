@@ -14,9 +14,7 @@ class App {
 	?>
 		<script>
 			var FLATCH = {
-				initialData: {
-					appTitle: "<?= safe($app_title) ?>",
-				}
+				APP_TITLE: "<?= safe($app_title) ?>",
 			}
 		</script>
 	<?php
