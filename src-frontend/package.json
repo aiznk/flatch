@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "main": "index.js",
   "scripts": {
-    "watch": "nodemon --watch src-frontend --exec \"npm run build\"",
-    "build": "esbuild index.js --bundle --outfile=../static/index.js"
+    "watch": "nodemon --watch src --exec \"npm run build\"",
+    "build": "esbuild src/index.js --bundle --outfile=../static/index.js"
   },
   "author": "Aizawa Yuta",
   "license": "MIT",
