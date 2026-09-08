@@ -6,9 +6,9 @@ class ThreadsListItem extends nue.Li {
 		super({ class: 'threads-list-item' })
 		this.thread = thread
 
-		let path = `/threads/${thread.slug}`
+		let path = this.thread.toPath()
 		this.link = new nue.Link(
-			thread.name,
+			thread.subject,
 			{ path },
 			`/?path=${path}`,
 			{ class: 'link' },
@@ -30,6 +30,10 @@ export default class Threads extends nue.Div {
 
 		this.list = new ThreadsList()
 		this.add(this.list)
+	}
+
+	clear () {
+		this.list.clear()
 	}
 
 	setThreads (threads /* Array<Thread> */) {

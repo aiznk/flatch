@@ -38,7 +38,7 @@ export default class Root extends nue.Root {
 	}
 
 	clickBoardItem (ev) {
-		this.mainModel.refRoute.value = `/?path=/boards/${ev.slug}`	
+		this.mainModel.refRoute.value = `/?path=/${FLATCH.BOARDS_DIR_NAME}/${ev.slug}`	
 	}
 
 	linkClick (ev) {

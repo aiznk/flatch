@@ -27,7 +27,7 @@ class BoardItem extends nue.Li {
 			events: ['click'],
 		})
 
-		this.link = new nue.Link(text, { path: `/boards/${slug}` }, `?path=/boards/${slug}`, { class: 'link' })
+		this.link = new nue.Link(text, { path: `/${FLATCH.BOARDS_DIR_NAME}/${slug}` }, `?path=/${FLATCH.BOARDS_DIR_NAME}/${slug}`, { class: 'link' })
 		this.add(this.link)
 	}
 }

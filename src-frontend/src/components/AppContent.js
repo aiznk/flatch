@@ -48,12 +48,13 @@ export default class AppContent extends nue.Div {
 		}
 
 		let m
+		let reg = new RegExp(`\/${FLATCH.BOARDS_DIR_NAME}\/([a-z0-9\-]+)`)
 
-		m = path.match(/\/boards\/([a-z0-9\-]+)/)
+		m = path.match(reg)
 		if (m) {
 			let slug = m[1]
-			await this.mainModel.loadBoardsDetail(slug)
 			this.boardsDetail.init(slug)
+			await this.mainModel.loadBoardsDetail(slug)
 			this.showOnly('boardsDetail')
 			return
 		}
@@ -62,7 +63,7 @@ export default class AppContent extends nue.Div {
 		default:
 			this.showOnly('home')
 			break
-		case '/boards':
+		case `/${FLATCH.BOARDS_DIR_NAME}`:
 			this.showOnly('boards')
 			break
 		}

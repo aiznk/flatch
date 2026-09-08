@@ -21,6 +21,9 @@ class App {
 				PUBLISHED_DATE: "<?= safe($this->config['published_date']) ?>",
 				CATEGORIES: <?= json_encode($categories) ?>,
 				BOARDS: <?= json_encode($boards) ?>,
+				BOARDS_DIR_NAME: "<?= BOARDS_DIR_NAME ?>",
+				THREADS_DIR_NAME: "<?= THREADS_DIR_NAME ?>",
+
 			}
 		</script>
 	<?php
@@ -55,27 +58,16 @@ class App {
 		$this->routing();
 	}
 
-	function is_valid_board_slug ($slug) {
-		foreach ($this->config['boards'] as $board) {
-			if ($board[1] === $slug) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	function api_load_boards_detail () {
 		$response = [];
 
 		$board_slug = $_GET['board_slug'] ?? null;
-		if (is_null($board_slug)) {
-			die("missing board slug");
-		}
-		if (!$this->is_valid_board_slug($board_slug)) {
-			die("invalid board slug $board_slug");
-		}
 
-		// TODO
+		$board = new BoardModel($this->config);
+		$board->init($board_slug);
+		$thread_subjects = $board->collect_thread_subjects();
+
+		$response['thread_subjects'] = $thread_subjects;
 
 		echo json_encode($response);
 	}
