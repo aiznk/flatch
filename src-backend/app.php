@@ -3,11 +3,12 @@ namespace fc;
 
 require_once __dir__ .'/consts.php';
 require_once __dir__ .'/utils.php';
+require_once __dir__ .'/models.php';
 
 class App {
 	public $config;
 
-	function draw_initial_data() {
+	function draw_initial_data () {
 		$app_title = $this->config['app_title'] ?? DEF_APP_TITLE;
 		$welcome_message = $this->config['welcome_message'] ?? 'Welcome';
 		$categories = $this->config['categories'] ?? [];
@@ -25,7 +26,7 @@ class App {
 	<?php
 	}
 
-	function draw_home() {
+	function draw_home () {
 	?>
 		<!DOCTYPE html>
 		<html>
@@ -44,21 +45,47 @@ class App {
 	<?php
 	}
 
-	function load_config() {
+	function load_config () {
 		$json = file_get_contents(CONFIG_PATH);
 		$this->config = json_decode($json, true);
 	}
 
-	function run() {
+	function run () {
 		$this->load_config();
 		$this->routing();
 	}
 
-	function routing() {
+	function is_valid_board_slug ($slug) {
+		foreach ($this->config['boards'] as $board) {
+			if ($board[1] === $slug) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function api_load_boards_detail () {
+		$response = [];
+
+		$board_slug = $_GET['board_slug'] ?? null;
+		if (is_null($board_slug)) {
+			die("missing board slug");
+		}
+		if (!$this->is_valid_board_slug($board_slug)) {
+			die("invalid board slug $board_slug");
+		}
+
+		// TODO
+
+		echo json_encode($response);
+	}
+
+	function routing () {
 		$m = $_GET['m'] ?? 'home';
 
 		switch ($m) {
 		case 'home': $this->draw_home(); break;
+		case 'api_load_boards_detail': $this->api_load_boards_detail(); break;
 		}
 	}
 }

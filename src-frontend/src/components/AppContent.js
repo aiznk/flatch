@@ -20,8 +20,8 @@ export default class AppContent extends nue.Div {
 		this.boardsDetail.hide()
 		this.add(this.boardsDetail)
 
-		this.mainModel.refRoute.onSet((_, path) => {
-			this.showPath(path)
+		this.mainModel.refRoute.onSet(async (_, path) => {
+			await this.showPath(path)
 		})
 
 		this.showPath(this.mainModel.refRoute.value)
@@ -42,7 +42,7 @@ export default class AppContent extends nue.Div {
 		}
 	}
 
-	showPath (path) {
+	async showPath (path) {
 		if (!path) {
 			return
 		}
@@ -52,6 +52,7 @@ export default class AppContent extends nue.Div {
 		m = path.match(/\/boards\/([a-z0-9\-]+)/)
 		if (m) {
 			let slug = m[1]
+			await this.mainModel.loadBoardsDetail(slug)
 			this.boardsDetail.init(slug)
 			this.showOnly('boardsDetail')
 			return

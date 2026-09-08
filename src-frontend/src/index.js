@@ -4,8 +4,6 @@ import { MainModel } from './models.js'
 
 async function main() {
 	let mainModel = new MainModel()
-	await mainModel.initialLoad()
-
 	let root = new Root(mainModel)
 	root.mount('#app')
 }
