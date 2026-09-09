@@ -72,12 +72,41 @@ class App {
 		echo json_encode($response);
 	}
 
+	function api_load_threads_detail () {
+		$response = [];
+
+		$board_slug = $_GET['board_slug'] ?? null;
+		$thread_id = $_GET['thread_id'] ?? null;
+
+		$thread = new ThreadModel($this->config);
+
+		try {
+			$thread->init($board_slug, $thread_id);
+		} catch (ValidationError $e) {
+			fail_die($e->getMessage());
+		}
+
+		try {
+			$records = $thread->parse_records();
+		} catch (FileDoesNotExistsError $e) {
+			fail_die($e->getMessage());
+		} catch (FileIOError $e) {
+			fail_die($e->getMessage());
+		}
+
+		$response['thread_records'] = $records;
+
+		echo json_encode($response);
+	}
+
 	function routing () {
 		$m = $_GET['m'] ?? 'home';
 
 		switch ($m) {
+		default: die("invalid mode $m"); break;
 		case 'home': $this->draw_home(); break;
 		case 'api_load_boards_detail': $this->api_load_boards_detail(); break;
+		case 'api_load_threads_detail': $this->api_load_threads_detail(); break;
 		}
 	}
 }

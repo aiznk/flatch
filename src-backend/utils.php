@@ -3,6 +3,11 @@ namespace fc;
 
 require_once __dir__ .'/consts.php';
 
+function fail_die ($msg) {
+	http_response_code(500);
+	die($msg);
+}
+
 function safe ($val) {
 	return htmlspecialchars($val);
 }
@@ -28,7 +33,7 @@ function parse_dat_stream_line ($fp) {
 	}
 
 	$line = trim($line);
-	$toks = explode(DAT_LINE_SEP, $line, 2);
+	$toks = explode(DAT_LINE_SEP, $line);
 
 	return $toks;
 }
