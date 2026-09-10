@@ -3,17 +3,18 @@ import * as nue from './nue/nue.js'
 export class MainModel {
 	constructor () {
 		this.refRoute = nue.ref(null)
+		this.refAppName = nue.ref(null)
 		this.refCategoriesList = nue.ref([])
 		this.refBoardsData = nue.ref([])
 		this.refBoardsDetailData = nue.ref(null)
 		this.refThreadsDetailData = nue.ref(null)
 	}
 
-	async postThread (boardSlug, threadTitle, name, email, content) {
+	async postThread (boardSlug, threadName, name, email, content) {
 		const data = new FormData()
 
 		data.append('board_slug', boardSlug)
-		data.append('thread_title', threadTitle)
+		data.append('thread_name', threadName)
 		data.append('name', name)
 		data.append('email', email)
 		data.append('content', content)

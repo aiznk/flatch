@@ -42,7 +42,7 @@ export default class Root extends nue.Root {
 	async postThread (ev) {
 		await this.mainModel.postThread(
 			ev.boardSlug,
-			ev.threadTitle,
+			ev.threadName,
 			ev.name,
 			ev.email,
 			ev.content,

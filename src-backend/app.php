@@ -15,12 +15,12 @@ class App {
 	}
 
 	function draw_initial_data () {
-		$app_title = $this->config['app_title'] ?? DEF_APP_TITLE;
+		$app_name = $this->config['app_name'] ?? DEF_APP_TITLE;
 		$welcome_message = $this->config['welcome_message'] ?? 'Welcome';
 	?>
 		<script>
 			var FLATCH = {
-				APP_TITLE: "<?= safe($app_title) ?>",
+				APP_TITLE: "<?= safe($app_name) ?>",
 				WELCOME_MESSAGE: "<?= safe($welcome_message) ?>",
 				PUBLISHED_DATE: "<?= safe($this->config['published_date']) ?>",
 				BOARDS_DIR_NAME: "<?= BOARDS_DIR_NAME ?>",
@@ -39,7 +39,7 @@ class App {
 			<meta name="viewport" content="width=device-width, initial-scale=1">
 			<script type="module" src="<?= INDEX_JS_PATH ?>"></script>
 			<link rel="stylesheet" href="<?= STYLE_CSS_PATH ?>" />
-			<title><?= safe($this->config['app_title'] ?? DEF_APP_TITLE) ?></title>
+			<title><?= safe($this->config['app_name'] ?? DEF_APP_TITLE) ?></title>
 			<?= $this->draw_initial_data() ?>
 		</head>
 		<body>

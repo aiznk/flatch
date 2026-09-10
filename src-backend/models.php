@@ -151,11 +151,11 @@ class SubjectsModel extends Model {
 
 class SubjectModel extends Model {
 	public $thread_id;
-	public $thread_title;
+	public $thread_name;
 
-	function init ($thread_id, $thread_title) {
+	function init ($thread_id, $thread_name) {
 		$this->thread_id = $thread_id;
-		$this->thread_title = $thread_title;
+		$this->thread_name = $thread_name;
 	}
 
 	function parse_line ($line) {
@@ -172,11 +172,11 @@ class SubjectModel extends Model {
 			throw new ParseError("invalid thread id of subject line: 0");
 		}
 
-		$this->thread_title = $toks[1];
+		$this->thread_name = $toks[1];
 	}
 
 	function to_record_line () {
-		return implode(DAT_LINE_SEP, [$this->thread_id, $this->thread_title]) ."\n";
+		return implode(DAT_LINE_SEP, [$this->thread_id, $this->thread_name]) ."\n";
 	}
 }
 
@@ -196,7 +196,7 @@ class ThreadModel extends Model {
 		$this->id = intval($thread_id);
 	}
 
-	function create ($board_slug, $title, $name, $email, $content) {
+	function create ($board_slug, $thread_name, $name, $email, $content) {
 		// thread
 		$this->board_slug = $board_slug;
 		$this->id = inc_id(THREAD_ID_PATH);	
@@ -205,7 +205,7 @@ class ThreadModel extends Model {
 		$record = new RecordModel();
 
 		try {
-			$record->init($name, $email, gen_datetime(), $content, $title);
+			$record->init($name, $email, gen_datetime(), $content, $thread_name);
 		} catch (ValidationError $e) {
 			throw $e;
 		}
@@ -222,7 +222,7 @@ class ThreadModel extends Model {
 		}
 
 		$subject = new SubjectModel();
-		$subject->init($this->id, $title);
+		$subject->init($this->id, $thread_name);
 
 		$subjects->shrink_tail(5);
 		$subjects->insert_at_first($subject);

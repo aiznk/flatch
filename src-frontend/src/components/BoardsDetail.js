@@ -15,12 +15,12 @@ class PostThreadForm extends nue.Div {
 		super({ class: 'post-thread-form' })
 		this.mainModel = mainModel
 
-		this.threadTitle = new LabelInput({
-			labelText: i18n.threadTitle(),
+		this.threadName = new LabelInput({
+			labelText: i18n.threadName(),
 		}, {
 			class: 'thread-title',
 		})
-		this.add(this.threadTitle)
+		this.add(this.threadName)
 
 		this.name = new LabelInput({
 			labelText: i18n.name(),
@@ -42,7 +42,7 @@ class PostThreadForm extends nue.Div {
 		this.add(this.content)
 
 		this.postBtn = new nue.Button(i18n.createNewThread(), async ev => {
-			ev.threadTitle = this.threadTitle.getValue()
+			ev.threadName = this.threadName.getValue()
 			ev.name = this.name.getValue()
 			ev.email = this.email.getValue()
 			ev.content = this.content.getValue()
@@ -73,6 +73,7 @@ export default class BoardsDetail extends nue.Div {
 				this.desc.setText(this.board.desc)
 			}
 			this.setThreadSubjects(data.thread_subjects)
+			this.mainModel.refAppName.value = this.board.name
 		})
 	}
 

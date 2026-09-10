@@ -41,7 +41,7 @@ class Api {
 
 	function post_thread () {
 		$board_slug = $_POST['board_slug'] ?? null;
-		$thread_title = $_POST['thread_title'] ?? null;
+		$thread_name = $_POST['thread_name'] ?? null;
 		$name = $_POST['name'] ?? null;
 		$email = $_POST['email'] ?? null;
 		$content = $_POST['content'] ?? null;
@@ -51,7 +51,7 @@ class Api {
 		try {
 			$thread_id = $thread->create(
 				$board_slug, 
-				$thread_title, 
+				$thread_name, 
 				$name, 
 				$email, 
 				$content,

@@ -12,8 +12,8 @@ export function createNewThread () {
 	return get('新規スレッド作成', 'Create new thread')
 }
 
-export function threadTitle () {
-	return get('スレッドタイトル', 'Thread title')
+export function threadName () {
+	return get('スレッド名', 'Thread name')
 }
 
 export function boards() {
