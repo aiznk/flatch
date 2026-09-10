@@ -167,8 +167,6 @@ class SubjectModel extends Model {
 		$toks = explode(DAT_LINE_SEP, trim($line));
 
 		if (count($toks) < 2) {
-			echo json_encode(['a' => $toks]);
-			exit(1);
 			throw new ParseError("invalid subject tokens length: ". count($toks));
 		}
 
