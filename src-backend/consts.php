@@ -1,12 +1,12 @@
 <?php
-define('CONFIG_PATH', 'config.json');
-define('BOARDS_PATH', 'boards.json');
-define('CATEGORIES_PATH', 'categories.json');
+define('DATA_DIR', './data');
+define('CONFIG_PATH', DATA_DIR .'/config.json');
+define('BOARDS_PATH', DATA_DIR .'/boards.json');
+define('CATEGORIES_PATH', DATA_DIR .'/categories.json');
 define('STATIC_DIR', './static');
 define('INDEX_JS_PATH', STATIC_DIR .'/index.js');
 define('STYLE_CSS_PATH', STATIC_DIR .'/style.css');
 define('DEF_APP_TITLE', 'Flatch');
-define('DATA_DIR', './data');
 define('BOARDS_DIR_NAME', 'boards');
 define('BOARDS_DIR', DATA_DIR . '/'. BOARDS_DIR_NAME);
 define('THREADS_DIR_NAME', 'threads');
