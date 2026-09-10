@@ -26,4 +26,4 @@ define('RES_CONTENT_MIN_LEN', 1);
 define('RES_CONTENT_MAX_LEN', 4096);
 define('RES_SUBJECT_MIN_LEN', 1);
 define('RES_SUBJECT_MAX_LEN', 128);
-define('INVALID_RES_REG_EXP', "/[\<|\>|\r|\n|\t|\v|\f|\b|\a|\\|\$|\0]/");
+define('INVALID_RECORD_REG_EXP', "/[\<|\>|\r|\n|\t|\v|\f|\b|\a|\\|\$|\0]/");
