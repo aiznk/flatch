@@ -50,7 +50,7 @@ export default class Root extends nue.Root {
 	}
 
 	async clickPostBtn (ev) {
-		await this.mainModel.postResponse(
+		await this.mainModel.postRecord(
 			ev.boardSlug, 
 			ev.threadId, 
 			ev.name, 

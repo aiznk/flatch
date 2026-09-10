@@ -39,7 +39,7 @@ export class MainModel {
 		console.log(json)
 	}
 
-	async postResponse (boardSlug, threadId, name, email, content) {
+	async postRecord (boardSlug, threadId, name, email, content) {
 		const data = new FormData()
 
 		data.append('board_slug', boardSlug)
@@ -50,7 +50,7 @@ export class MainModel {
 
 		let response
 		try {
-			response = await fetch('/?m=api_post_response', {
+			response = await fetch('/?m=api_post_record', {
 				method: 'POST',
 				body: data,
 			})

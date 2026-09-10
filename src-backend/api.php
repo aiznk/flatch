@@ -68,7 +68,7 @@ class Api {
 		]);
 	}
 
-	function post_response () {
+	function post_record () {
 		$board_slug = $_POST['board_slug'] ?? null;
 		$thread_id = $_POST['thread_id'] ?? null;
 		$name = $_POST['name'] ?? null;
