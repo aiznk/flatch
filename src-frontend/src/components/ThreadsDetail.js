@@ -152,7 +152,9 @@ export default class ThreadsDetail extends nue.Div {
 		if (this.records.children.length >= FLATCH.LIMIT_DAT_FILE_LINES) {
 			let item = new ReachedLimitItem()
 			this.records.add(item)
-			this.remove(this.postForm)
+			if (this.has(this.postForm)) {
+				this.remove(this.postForm)
+			}
 		}
 	}
 }
