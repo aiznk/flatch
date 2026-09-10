@@ -109,6 +109,8 @@ class Api {
 			return $this->echo_exception($e);
 		}
 
+		$response['board_slug'] = $board_slug;
+		$response['thread_id'] = $thread_id;
 		$response['thread_records'] = $records;
 
 		echo json_encode($response);

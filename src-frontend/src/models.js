@@ -94,14 +94,7 @@ export class BoardModel {
 		this.name = null
 		this.slug = null
 		this.categorySlug = null
-		this.attrs = {}
-	}
-
-	init (name, slug, categorySlug, attrs={}) {
-		this.name = name
-		this.slug = slug
-		this.categorySlug = categorySlug
-		this.attrs = attrs
+		this.desc = null
 	}
 
 	parseData (data /* Object */) {

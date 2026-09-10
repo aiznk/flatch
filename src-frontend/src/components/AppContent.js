@@ -59,7 +59,7 @@ export default class AppContent extends nue.Div {
 		m = path.match(reg)
 		if (m) {
 			let slug = m[1]
-			this.boardsDetail.init(slug)
+			this.boardsDetail.clear()
 			await this.mainModel.loadBoardsDetail(slug)
 			this.showOnly('boardsDetail')
 			return
@@ -74,7 +74,7 @@ export default class AppContent extends nue.Div {
 				console.error('invalid thread id')
 				return
 			}
-			this.threadsDetail.init(boardSlug, threadId)
+			this.threadsDetail.clear()
 			await this.mainModel.loadThreadsDetail(boardSlug, threadId)
 			this.showOnly('threadsDetail')
 			return

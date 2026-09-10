@@ -13,7 +13,6 @@ export default class BoardsDetail extends nue.Div {
 	constructor (mainModel) {
 		super({ class: 'boards-detail' })
 		this.mainModel = mainModel
-		this.boardSlug = null /* String */
 		this.board = new BoardModel()
 
 		this.desc = new Desc()
@@ -31,8 +30,7 @@ export default class BoardsDetail extends nue.Div {
 		})
 	}
 
-	init (boardSlug) {
-		this.boardSlug = boardSlug
+	clear () {
 		this.desc.setText('')
 		this.threads.clear()
 	}

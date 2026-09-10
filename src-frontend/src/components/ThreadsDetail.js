@@ -69,9 +69,9 @@ export default class ThreadsDetail extends nue.Div {
 	constructor (mainModel) {
 		super({ class: 'threads-detail' })
 		this.mainModel = mainModel
-		this.refBoardSlug = nue.ref(null)
-		this.refThreadId = nue.ref(null)
-		this.refSubject = nue.ref(null)
+		this.boardSlug = null
+		this.threadId = null
+		this.subject = null
 
 		this.records = new Records()
 		this.add(this.records)
@@ -80,6 +80,11 @@ export default class ThreadsDetail extends nue.Div {
 		this.add(this.postForm)
 
 		this.mainModel.refThreadsDetailData.onSet((_, data) => {
+			this.boardSlug = data.board_slug
+			this.threadId = parseInt(data.thread_id)
+			if (isNaN(this.threadId) || this.threadId <= 0) {
+				console.error('invalid thread id')
+			}
 			this.setRecordsData(data.thread_records)
 		})
 	}
@@ -88,21 +93,19 @@ export default class ThreadsDetail extends nue.Div {
 		switch (key) {
 		default: this.emit(key, val); break
 		case 'clickPostBtn':
-			val.boardSlug = this.refBoardSlug.value
-			val.threadId = this.refThreadId.value
+			val.boardSlug = this.boardSlug
+			val.threadId = this.threadId
 			this.emit(key, val)
 			break
 		}
 	}
 
-	init (boardSlug, threadId) {
-		this.refBoardSlug.value = boardSlug
-		this.refThreadId.value = threadId
+	clear () {
 		this.records.clear()
 	}
 
 	setRecordsData (records) {
-		this.refSubject.value = records[0][5]
+		this.subject = records[0][5]
 
 		this.records.clear()
 		for (let rec of records) {
