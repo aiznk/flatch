@@ -168,7 +168,7 @@ export class RecordModel {
 	parseContentAsHTML () {
 		let content = this.content
 
-		content = content.replaceAll('[br]', '<br>')
+		content = content.replaceAll('[br/]', '<br/>')
 
 		return content
 	}
