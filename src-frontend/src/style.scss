@@ -69,3 +69,13 @@ html, body, #app, .root {
 		display: block;
 	}
 }
+.records-item {
+	.top {
+		.field {
+			margin-left: calc($pad-x*0.2);
+		}	
+	}
+}
+.records-item:not(:last-child) {
+	margin-bottom: calc($pad-y);
+}

@@ -155,11 +155,12 @@ export class ThreadModel {
 }
 
 export class RecordModel {
-	constructor (data) {
+	constructor (data, num) {
 		if (data.length < 4) {
 			throw new Error(`invalid record length ${data.length}`)
 		}
 
+		this.num = num
 		this.name = data[0]
 		this.email = data[1]
 		this.datetime = data[2]

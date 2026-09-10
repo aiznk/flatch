@@ -1,6 +1,5 @@
 <?php
 namespace fc;
-
 require_once __dir__ .'/consts.php';
 require_once __dir__ .'/utils.php';
 require_once __dir__ .'/models.php';
@@ -25,6 +24,7 @@ class App {
 				PUBLISHED_DATE: "<?= safe($this->config['published_date']) ?>",
 				BOARDS_DIR_NAME: "<?= BOARDS_DIR_NAME ?>",
 				THREADS_DIR_NAME: "<?= THREADS_DIR_NAME ?>",
+				LIMIT_DAT_FILE_LINES: <?= LIMIT_DAT_FILE_LINES ?>,
 			}
 		</script>
 	<?php

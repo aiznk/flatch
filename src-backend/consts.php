@@ -15,7 +15,7 @@ define('SUBJECTS_FILE_NAME', 'subjects.dat');
 define('BOARD_SETTING_FILE_NAME', 'setting.json');
 define('DAT_LINE_SEP', '<>');
 define('DAT_FILE_EXT', '.dat');
-define('LIMIT_DAT_FILE_LINES', 1000);
+define('LIMIT_DAT_FILE_LINES', 3);
 define('RES_NAME_MIN_LEN', 0);
 define('RES_NAME_MAX_LEN', 64);
 define('RES_EMAIL_MIN_LEN', 0);

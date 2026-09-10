@@ -7,21 +7,31 @@ class RecordsItem extends nue.Li {
 		super({ class: 'records-item' })
 		this.record = record
 
-		this.name = new nue.Span({ class: 'name' })
+		this.top = new nue.Div({ class: 'top' })
+		this.add(this.top)
+
+		this.bottom = new nue.Div({ class: 'bottom' })
+		this.add(this.bottom)
+
+		this.num = new nue.Span({ class: 'field num' })
+		this.num.setText(this.record.num + ':')
+		this.top.add(this.num)
+
+		this.name = new nue.Span({ class: 'field name' })
 		this.name.setText(this.record.name)
-		this.add(this.name)
+		this.top.add(this.name)
 
-		this.email = new nue.Span({ class: 'email' })
+		this.email = new nue.Span({ class: 'field email' })
 		this.email.setText(this.record.email)
-		this.add(this.email)
+		this.top.add(this.email)
 
-		this.datetime = new nue.Span({ class: 'datetime' })
+		this.datetime = new nue.Span({ class: 'field datetime' })
 		this.datetime.setText(this.record.datetime)
-		this.add(this.datetime)
+		this.top.add(this.datetime)
 
-		this.content = new nue.Div({ class: 'content' })
+		this.content = new nue.Div({ class: 'field content' })
 		this.content.setHTML(this.record.parseContentAsHTML())
-		this.add(this.content)
+		this.bottom.add(this.content)
 	}
 }
 
@@ -77,6 +87,13 @@ class ThreadTitleWrapper extends nue.Div {
 	}
 }
 
+class ReachedLimitItem extends nue.Div {
+	constructor () {
+		super({ class: 'reached-limit-item' })
+		this.setText(i18n.reachedLimitMessage())
+	}
+}
+
 export default class ThreadsDetail extends nue.Div {
 	constructor (mainModel) {
 		super({ class: 'threads-detail' })
@@ -124,12 +141,18 @@ export default class ThreadsDetail extends nue.Div {
 
 	setRecordsData (records) {
 		this.refTitle.value = records[0][4]
-
 		this.records.clear()
-		for (let rec of records) {
-			let record = new RecordModel(rec)
+
+		for (let i = 0; i < records.length; i++) {
+			let rec = records[i]
+			let record = new RecordModel(rec, i+1)
 			let item = new RecordsItem(record)
 			this.records.add(item)
+		}
+		if (this.records.children.length >= FLATCH.LIMIT_DAT_FILE_LINES) {
+			let item = new ReachedLimitItem()
+			this.records.add(item)
+			this.remove(this.postForm)
 		}
 	}
 }
