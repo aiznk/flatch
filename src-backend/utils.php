@@ -32,7 +32,7 @@ function gen_board_subjects_path ($board_slug) {
 
 function gen_threads_dir ($board_slug) {
 	$board_dir = gen_boards_dir($board_slug);
-	return check_path($board_dir .'/threads/');		
+	return check_path($board_dir .'/'. THREADS_DIR_NAME);		
 }
 
 function gen_dat_path ($board_slug, $thread_id) {
