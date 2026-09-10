@@ -7,6 +7,7 @@ export default class AppHeader extends nue.Div {
 		this.mainModel = mainModel
 
 		this.appTitle = new nue.H1('', { class: 'app-title' })
+		this.appTitle.setText(FLATCH.APP_TITLE)
 		this.add(this.appTitle)
 
 		this.home = new nue.Link(i18n.home(), { path: '/home' }, '/?path=/home', { class: 'link' })
@@ -14,11 +15,5 @@ export default class AppHeader extends nue.Div {
 
 		this.boards = new nue.Link(i18n.boards(), { path: `/${FLATCH.BOARDS_DIR_NAME}` }, `/?path=/${FLATCH.BOARDS_DIR_NAME}`, { class: 'link' })
 		this.add(this.boards)
-
-		this.mainModel.refAppTitle.onSet((_, appTitle) => {
-			this.appTitle.setText(appTitle ?? 'Unknown')
-		})
-
-		this.appTitle.setText(this.mainModel.refAppTitle.value)
 	}
 }
