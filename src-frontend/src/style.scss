@@ -1,5 +1,5 @@
 $pad-y: 1rem;
-$pad-x: 1.618rem;
+$pad-x: 1.414rem;
 $link-color: blue;
 $link-color-hover: red;
 $t-sec: 0.3s;
@@ -48,5 +48,24 @@ html, body, #app, .root {
 	}
 	.separate-item:before {
 		content: "/";
+	}
+}
+.post-form {
+	display: inline-block;
+	border: 1px solid gray;
+	padding: $pad-y $pad-x;
+	.name, .email {
+		display: block;
+		margin-bottom: calc($pad-y*0.5);
+		padding: calc($pad-y*0.3) calc($pad-x*0.3);
+	}
+	.content {
+		min-width: 400px;
+		min-height: 100px;
+		margin-bottom: calc($pad-y*0.5);
+		padding: calc($pad-y*0.3) calc($pad-x*0.3);
+	}
+	.post-btn {
+		display: block;
 	}
 }

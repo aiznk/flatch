@@ -8,6 +8,32 @@ export class MainModel {
 		this.refThreadsDetailData = nue.ref(null)
 	}
 
+	async postResponse (boardSlug, threadId, name, email, content) {
+		const data = new FormData()
+
+		data.append('board_slug', boardSlug)
+		data.append('thread_id', threadId)
+		data.append('name', name)
+		data.append('email', email)
+		data.append('content', content)
+
+		let response
+		try {
+			response = await fetch('/?m=api_post_response', {
+				method: 'POST',
+				body: data,
+			})
+		} catch (e) {
+			console.error(e)
+			return
+		}
+
+		if (response.status !== 200) {
+			let json = await response.json()
+			console.error(json.message)
+		}
+	}
+
 	async loadBoardsDetail (boardSlug) {
 		let response
 		try {

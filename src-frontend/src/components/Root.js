@@ -30,11 +30,22 @@ export default class Root extends nue.Root {
 		this.mainModel.refRoute.value = params.get('path') || '/home'
 	}
 
-	receive (key, val) {
+	async receive (key, val) {
 		switch (key) {
 		case 'linkClick': this.linkClick(val); break
 		case 'clickBoardItem': this.clickBoardItem(val); break
+		case 'clickPostBtn': await this.clickPostBtn(val); break
 		}
+	}
+
+	async clickPostBtn (ev) {
+		await this.mainModel.postResponse(
+			ev.boardSlug, 
+			ev.threadId, 
+			ev.name, 
+			ev.email, 
+			ev.content,
+		)
 	}
 
 	clickBoardItem (ev) {

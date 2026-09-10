@@ -4,9 +4,15 @@ namespace fc;
 require_once __dir__ .'/consts.php';
 require_once __dir__ .'/utils.php';
 require_once __dir__ .'/models.php';
+require_once __dir__ .'/api.php';
 
 class App {
 	public $config;
+	public $api;
+
+	function __construct () {
+		$this->api = new Api();
+	}
 
 	function draw_initial_data () {
 		$app_title = $this->config['app_title'] ?? DEF_APP_TITLE;
@@ -51,52 +57,12 @@ class App {
 	function load_config () {
 		$json = file_get_contents(CONFIG_PATH);
 		$this->config = json_decode($json, true);
+		$this->api->set_config($this->config);
 	}
 
 	function run () {
 		$this->load_config();
 		$this->routing();
-	}
-
-	function api_load_boards_detail () {
-		$response = [];
-
-		$board_slug = $_GET['board_slug'] ?? null;
-
-		$board = new BoardModel($this->config);
-		$board->init($board_slug);
-		$thread_subjects = $board->collect_thread_subjects();
-
-		$response['thread_subjects'] = $thread_subjects;
-
-		echo json_encode($response);
-	}
-
-	function api_load_threads_detail () {
-		$response = [];
-
-		$board_slug = $_GET['board_slug'] ?? null;
-		$thread_id = $_GET['thread_id'] ?? null;
-
-		$thread = new ThreadModel($this->config);
-
-		try {
-			$thread->init($board_slug, $thread_id);
-		} catch (ValidationError $e) {
-			fail_die($e->getMessage());
-		}
-
-		try {
-			$records = $thread->parse_records();
-		} catch (FileDoesNotExistsError $e) {
-			fail_die($e->getMessage());
-		} catch (FileIOError $e) {
-			fail_die($e->getMessage());
-		}
-
-		$response['thread_records'] = $records;
-
-		echo json_encode($response);
 	}
 
 	function routing () {
@@ -105,8 +71,9 @@ class App {
 		switch ($m) {
 		default: die("invalid mode $m"); break;
 		case 'home': $this->draw_home(); break;
-		case 'api_load_boards_detail': $this->api_load_boards_detail(); break;
-		case 'api_load_threads_detail': $this->api_load_threads_detail(); break;
+		case 'api_post_response': $this->api->post_response(); break;
+		case 'api_load_boards_detail': $this->api->load_boards_detail(); break;
+		case 'api_load_threads_detail': $this->api->load_threads_detail(); break;
 		}
 	}
 }

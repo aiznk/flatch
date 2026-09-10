@@ -10,12 +10,15 @@ class RecordsItem extends nue.Li {
 		this.name = new nue.Span({ class: 'name' })
 		this.name.setText(this.record.name)
 		this.add(this.name)
+
 		this.email = new nue.Span({ class: 'email' })
 		this.email.setText(this.record.email)
 		this.add(this.email)
+
 		this.datetime = new nue.Span({ class: 'datetime' })
 		this.datetime.setText(this.record.datetime)
 		this.add(this.datetime)
+
 		this.content = new nue.Div({ class: 'content' })
 		this.content.setText(this.record.content)
 		this.add(this.content)
@@ -25,6 +28,40 @@ class RecordsItem extends nue.Li {
 class Records extends nue.Ul {
 	constructor () {
 		super({ class: 'records' })
+	}
+}
+
+class PostForm extends nue.Div {
+	constructor () {
+		super({ class: 'post-form' })
+
+		this.name = new nue.Input({
+			class: 'name',
+			placeholder: i18n.name(),
+		})
+		this.add(this.name)
+
+		this.email = new nue.Input({
+			class: 'name',
+			placeholder: i18n.email(),
+		})
+		this.add(this.email)
+
+		this.content = new nue.Textarea({
+			class: 'content',
+			placeholder: i18n.content(),
+		})
+		this.add(this.content)
+
+		this.postBtn = new nue.Button(i18n.write(), async ev => {
+			ev.name = this.name.getValue()
+			ev.email = this.email.getValue()
+			ev.content = this.content.getValue()
+			await this.emit('clickPostBtn', ev)
+		}, {
+			class: 'post-btn',
+		})
+		this.add(this.postBtn)
 	}
 }
 
@@ -39,10 +76,23 @@ export default class ThreadsDetail extends nue.Div {
 		this.records = new Records()
 		this.add(this.records)
 
+		this.postForm = new PostForm()
+		this.add(this.postForm)
+
 		this.mainModel.refThreadsDetailData.onSet((_, data) => {
-			console.log(data)
 			this.setRecordsData(data.thread_records)
 		})
+	}
+
+	receive (key, val) {
+		switch (key) {
+		default: this.emit(key, val); break
+		case 'clickPostBtn':
+			val.boardSlug = this.refBoardSlug.value
+			val.threadId = this.refThreadId.value
+			this.emit(key, val)
+			break
+		}
 	}
 
 	init (boardSlug, threadId) {
@@ -53,7 +103,7 @@ export default class ThreadsDetail extends nue.Div {
 
 	setRecordsData (records) {
 		this.refSubject.value = records[0][5]
-		
+
 		this.records.clear()
 		for (let rec of records) {
 			let record = new RecordModel(rec)

@@ -15,3 +15,23 @@ export function boards() {
 export function home() {
 	return get('ホーム', 'Home')
 }
+
+export function write () {
+	return get('書き込む', 'Write')
+}
+
+export function name () {
+	return get('名前(省略可)', 'Name')
+}
+
+export function email () {
+	return get('メールアドレス(省略可)', 'Email')
+}
+
+export function content () {
+	return get('コメント内容', 'Content')
+}
+
+export function invalidPostData () {
+	return get('投稿データが不正です。', 'Invalid post data.')
+}

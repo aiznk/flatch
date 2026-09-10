@@ -3,6 +3,13 @@ namespace fc;
 require_once __dir__ .'/consts.php';
 require_once __dir__ .'/utils.php';
 require_once __dir__ .'/excepts.php';
+require_once __dir__ .'/validators.php';
+
+function gen_datetime () {
+	$weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+	$datetime = date('Y/m/d') . '(' . $weekdays[date('w')] . ') ' . date('H:i:s.v');
+	return $datetime;
+}
 
 class Model {
 	public $config;
@@ -85,11 +92,19 @@ class ThreadModel extends Model {
 		$this->id = intval($thread_id);
 	}
 
-	function parse_records () {
-		$threads_dir = check_path(BOARDS_DIR .'/'. $this->board_slug .'/threads/');
+	function gen_threads_dir () {
+		return check_path(BOARDS_DIR .'/'. $this->board_slug .'/threads/');		
+	}
+
+	function gen_dat_path () {
+		$threads_dir = $this->gen_threads_dir();
 		touch_dirs($threads_dir);
-		
 		$dat_path = check_path($threads_dir .'/'. $this->id .'.dat'); 
+		return $dat_path;
+	}
+
+	function parse_records () {
+		$dat_path = $this->gen_dat_path();
 
 		if (!file_exists($dat_path)) {
 			throw new FileDoesNotExistsError('dat file does not exists');
@@ -109,5 +124,104 @@ class ThreadModel extends Model {
 		fclose($fp);
 
 		return $records;
+	}
+
+	function add_record ($name, $email, $content) {
+		$record = new RecordModel($this->config);
+
+		$record->init($name, $email, gen_datetime(), $content, '');
+
+		$dat_path = $this->gen_dat_path();
+		if (!file_exists($dat_path)) {
+			throw new FileDoesNotExistsError('dat file does not exists');
+		}
+
+		file_put_contents($dat_path, $record->to_string(), FILE_APPEND);
+	}
+}
+
+class RecordModel extends Model {
+	public $config;
+	public $name;
+	public $email;
+	public $datetime;
+	public $content;
+	public $subject;
+
+	function __construct ($config) {
+		parent::__construct($config);
+	}
+
+	function init ($name, $email, $datetime, $content, $subject) {
+		$this->name = $name;
+		$this->email = $email;
+		$this->datetime = $datetime;
+		$this->content = $content;
+		$this->subject = $subject;		
+
+		$this->replace();
+
+		$subject_empty = strlen($subject) === 0;
+
+		try {
+			$this->validate($subject_empty);
+		} catch (ValidationError $e) {
+			throw $e;
+		}
+	}
+
+	function replace_chars ($s) {
+		$s = str_replace("&", "&amp;", $s);
+		$s = str_replace("<", "&lt;", $s);
+		$s = str_replace(">", "&gt;", $s);
+		$s = str_replace('"', "&quot;", $s);
+		$s = str_replace("'", "&apos;", $s);
+		$s = str_replace("\r", "", $s);
+		$s = str_replace("\n", "<br>", $s);
+		$s = str_replace("\t", "", $s);
+		$s = str_replace("\v", "", $s);
+		$s = str_replace("\f", "", $s);
+		$s = str_replace("\b", "", $s);
+		$s = str_replace("\a", "", $s);
+		$s = str_replace("\\", "", $s);
+		$s = str_replace("\$", "", $s);
+		$s = str_replace("\0", "", $s);
+		return $s;
+	}
+
+	function replace () {
+		$this->name = $this->replace_chars($this->name);
+		$this->email = $this->replace_chars($this->email);
+		$this->datetime = $this->replace_chars($this->datetime);
+		$this->content = $this->replace_chars($this->content);
+		$this->subject = $this->replace_chars($this->subject);
+	}
+
+	function to_string () {
+		$record = [
+			$this->name,
+			$this->email,
+			$this->datetime,
+			$this->content,
+			$this->subject,
+		];
+		return implode(DAT_LINE_SEP, $record) ."\n";	
+	}
+
+	function validate ($subject_empty=false) {
+		$v = new RecordValidator();
+		$v->subject_empty = $subject_empty;
+
+		try {
+			$v->validate(
+				$this->name, 
+				$this->email, 
+				$this->datetime, 
+				$this->content, 
+				$this->subject,
+			);
+		} catch (ValidationError $e) {
+			throw $e;			
+		}
 	}
 }
