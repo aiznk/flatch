@@ -8,6 +8,14 @@ function get(jp, en) {
 	}
 }
 
+export function createNewThread () {
+	return get('新規スレッド作成', 'Create new thread')
+}
+
+export function threadTitle () {
+	return get('スレッドタイトル', 'Thread title')
+}
+
 export function boards() {
 	return get('板一覧', 'Boards')
 }

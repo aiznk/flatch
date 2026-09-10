@@ -67,8 +67,9 @@ class App {
 			$this->load_config();
 			$this->draw_home(); 
 			break;
-		case 'api_load_boards_data': $this->api->load_boards_data(); break;
+		case 'api_post_thread': $this->api->post_thread(); break;
 		case 'api_post_response': $this->api->post_response(); break;
+		case 'api_load_boards_data': $this->api->load_boards_data(); break;
 		case 'api_load_boards_detail': $this->api->load_boards_detail(); break;
 		case 'api_load_threads_detail': $this->api->load_threads_detail(); break;
 		}

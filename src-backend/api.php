@@ -39,6 +39,10 @@ class Api {
 		echo json_encode($response);
 	}
 
+	function post_thread () {
+		TODO
+	}
+
 	function post_response () {
 		$board_slug = $_POST['board_slug'] ?? null;
 		$thread_id = $_POST['thread_id'] ?? null;

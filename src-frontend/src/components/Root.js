@@ -32,10 +32,21 @@ export default class Root extends nue.Root {
 
 	async receive (key, val) {
 		switch (key) {
+		case 'postThread': await this.postThread(val); break
 		case 'linkClick': this.linkClick(val); break
 		case 'clickBoardItem': this.clickBoardItem(val); break
 		case 'clickPostBtn': await this.clickPostBtn(val); break
 		}
+	}
+
+	async postThread (ev) {
+		await this.mainModel.postThread(
+			ev.boardSlug,
+			ev.threadTitle,
+			ev.name,
+			ev.email,
+			ev.content,
+		)
 	}
 
 	async clickPostBtn (ev) {

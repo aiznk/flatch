@@ -2,10 +2,53 @@ import * as nue from '../nue/nue.js'
 import * as i18n from '../i18n.js'
 import { BoardModel, ThreadModel } from '../models.js'
 import Threads from './Threads.js'
+import { LabelInput } from './widgets.js'
 
 class Desc extends nue.P {
 	constructor () {
 		super({ class: 'desc' })
+	}
+}
+
+class PostThreadForm extends nue.Div {
+	constructor (mainModel) {
+		super({ class: 'post-thread-form' })
+		this.mainModel = mainModel
+
+		this.threadTitle = new LabelInput({
+			labelText: i18n.threadTitle(),
+		}, {
+			class: 'thread-title',
+		})
+		this.add(this.threadTitle)
+
+		this.name = new LabelInput({
+			labelText: i18n.name(),
+		}, {
+			class: 'name',
+		})
+		this.add(this.name)
+
+		this.email = new LabelInput({
+			labelText: i18n.email(), 
+		}, {
+			class: 'email',
+		})
+		this.add(this.email)
+
+		this.content = new nue.Textarea({
+			class: 'content'
+		})
+		this.add(this.content)
+
+		this.postBtn = new nue.Button(i18n.createNewThread(), async ev => {
+			ev.threadTitle = this.threadTitle.getValue()
+			ev.name = this.name.getValue()
+			ev.email = this.email.getValue()
+			ev.content = this.content.getValue()
+			this.emit('postThread', ev)
+		})
+		this.add(this.postBtn)
 	}
 }
 
@@ -21,6 +64,9 @@ export default class BoardsDetail extends nue.Div {
 		this.threads = new Threads(this.mainModel)
 		this.add(this.threads)
 
+		this.postThreadForm = new PostThreadForm(this.mainModel)
+		this.add(this.postThreadForm)
+
 		this.mainModel.refBoardsDetailData.onSet((_, data) => {
 			this.board.parseData(data.board)
 			if (this.board.desc) {
@@ -28,6 +74,16 @@ export default class BoardsDetail extends nue.Div {
 			}
 			this.setThreadSubjects(data.thread_subjects)
 		})
+	}
+
+	receive (key, val) {
+		switch (key) {
+		default: this.emit(key, val); break
+		case 'postThread':
+			val.boardSlug = this.board.slug
+			this.emit(key, val)
+			break
+		}
 	}
 
 	clear () {
