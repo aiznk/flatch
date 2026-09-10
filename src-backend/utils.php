@@ -1,8 +1,25 @@
 <?php
 namespace fc;
-
 require_once __dir__ .'/consts.php';
 require_once __dir__ .'/excepts.php';
+
+function count_file_lines(string $filename): int {
+    $fp = fopen($filename, 'rb');
+    if ($fp === false) {
+        return false;
+    }
+
+    $count = 0;
+
+    while (!feof($fp)) {
+        $buf = fread($fp, 1024 * 1024);
+        $count += substr_count($buf, "\n");
+    }
+
+    fclose($fp);
+
+    return $count;
+}
 
 function gen_boards_dir ($board_slug) {
 	return check_path(BOARDS_DIR .'/'. $board_slug);

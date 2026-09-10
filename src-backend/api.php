@@ -89,6 +89,10 @@ class Api {
 			return $this->echo_exception($e);
 		} catch (FileDoesNotExistsError $e) {
 			return $this->echo_exception($e);
+		} catch (FileIOError $e) {
+			return $this->echo_exception($e);
+		} catch (ReachedLimitError $e) {
+			return $this->echo_exception($e);
 		}
 
 		echo json_encode([]);

@@ -276,6 +276,14 @@ class ThreadModel extends Model {
 			throw new FileDoesNotExistsError('dat file does not exists');
 		}
 
+		$nlines = count_file_lines($dat_path);
+		if ($nlines === false) {
+			throw new FileIOError('failed to count dat file lines');
+		}
+		if ($nlines >= LIMIT_DAT_FILE_LINES) {
+			throw new ReachedLimitError('reached limit of dat file');
+		}
+
 		file_put_contents($dat_path, $record->to_record_line(), FILE_APPEND);
 	}
 }
