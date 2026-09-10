@@ -1,6 +1,5 @@
 <?php
 namespace fc;
-
 require_once __dir__ .'/excepts.php';
 require_once __dir__ .'/utils.php';
 require_once __dir__ .'/models.php';
@@ -18,6 +17,21 @@ class Api {
 		echo json_encode([
 			'message' => $msg,
 		]);		
+	}
+
+	function set_last_post_time () {
+		$_SESSION['last_post_time'] = time();
+	}
+
+	function can_not_post () {
+		$t1 = intval($_SESSION['last_post_time']);
+		$t2 = time();
+
+		if ($t2 - $t1 <= MAX_LAST_POST_DIF) {
+			return true;
+		}
+
+		return false;
 	}
 
 	function load_boards_data () {
@@ -40,6 +54,10 @@ class Api {
 	}
 
 	function post_thread () {
+		if ($this->can_not_post()) {
+			return $this->echo_error("can't post");
+		}
+
 		$board_slug = $_POST['board_slug'] ?? null;
 		$thread_name = $_POST['thread_name'] ?? null;
 		$name = $_POST['name'] ?? null;
@@ -62,6 +80,8 @@ class Api {
 			return $this->echo_exception($e);
 		}
 
+		$this->set_last_post_time();
+
 		echo json_encode([
 			'thread_id' => $thread_id,
 			'board_slug' => $board_slug,
@@ -69,6 +89,10 @@ class Api {
 	}
 
 	function post_record () {
+		if ($this->can_not_post()) {
+			return $this->echo_error("can't post");
+		}
+
 		$board_slug = $_POST['board_slug'] ?? null;
 		$thread_id = $_POST['thread_id'] ?? null;
 		$name = $_POST['name'] ?? null;
@@ -94,6 +118,8 @@ class Api {
 		} catch (ReachedLimitError $e) {
 			return $this->echo_exception($e);
 		}
+
+		$this->set_last_post_time();
 
 		echo json_encode([]);
 	}

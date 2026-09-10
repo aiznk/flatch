@@ -1,5 +1,6 @@
 <?php
 define('DATA_DIR', './data');
+define('MAX_LAST_POST_DIF', 3); // x seconds
 define('CONFIG_PATH', DATA_DIR .'/config.json');
 define('BOARDS_PATH', DATA_DIR .'/boards.json');
 define('CATEGORIES_PATH', DATA_DIR .'/categories.json');

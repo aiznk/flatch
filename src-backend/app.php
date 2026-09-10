@@ -54,8 +54,18 @@ class App {
 		$this->config = json_decode($json, true);
 	}
 
+	function setup () {
+		session_start();
+	}
+
+	function cleanup () {
+		session_write_close();
+	}
+
 	function run () {
+		$this->setup();
 		$this->routing();
+		$this->cleanup();
 	}
 
 	function routing () {
