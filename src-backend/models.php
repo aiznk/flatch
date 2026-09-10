@@ -95,6 +95,11 @@ class SubjectsModel extends Model {
 		$this->board_slug = $board_slug;
 		$subjects_path = gen_board_subjects_path($board_slug);
 
+		if (!file_exists($subjects_path)) {
+			$this->subjects = [];
+			return $this->subjects;
+		}
+
 		$content = file_get_contents($subjects_path);
 		if ($content === false) {
 			throw new FileIOError('failed to read subjects file');
