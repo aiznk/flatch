@@ -40,7 +40,32 @@ class Api {
 	}
 
 	function post_thread () {
-		TODO
+		$board_slug = $_POST['board_slug'] ?? null;
+		$thread_title = $_POST['thread_title'] ?? null;
+		$name = $_POST['name'] ?? null;
+		$email = $_POST['email'] ?? null;
+		$content = $_POST['content'] ?? null;
+
+		$thread = new ThreadModel();
+
+		try {
+			$thread_id = $thread->create(
+				$board_slug, 
+				$thread_title, 
+				$name, 
+				$email, 
+				$content,
+			);
+		} catch (ValidationError $e) {
+			return $this->echo_exception($e);
+		} catch (FileIOError $e) {
+			return $this->echo_exception($e);
+		}
+
+		echo json_encode([
+			'thread_id' => $thread_id,
+			'board_slug' => $board_slug,
+		]);
 	}
 
 	function post_response () {

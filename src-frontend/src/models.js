@@ -32,7 +32,11 @@ export class MainModel {
 		if (response.status !== 200) {
 			let json = await response.json()
 			console.error(json.message)
+			return
 		}
+
+		let json = await response.json()
+		console.log(json)
 	}
 
 	async postResponse (boardSlug, threadId, name, email, content) {

@@ -2,6 +2,54 @@
 namespace fc;
 
 require_once __dir__ .'/consts.php';
+require_once __dir__ .'/excepts.php';
+
+function gen_boards_dir ($board_slug) {
+	return check_path(BOARDS_DIR .'/'. $board_slug);
+}
+
+function gen_board_subjects_path ($board_slug) {
+	$board_dir = gen_boards_dir($board_slug);
+	return check_path($board_dir .'/'. SUBJECTS_FILE_NAME);
+}
+
+function gen_threads_dir ($board_slug) {
+	$board_dir = gen_boards_dir($board_slug);
+	return check_path($board_dir .'/threads/');		
+}
+
+function gen_dat_path ($board_slug, $thread_id) {
+	$threads_dir = gen_threads_dir($board_slug);
+	touch_dirs($threads_dir);
+	$dat_path = check_path($threads_dir .'/'. $thread_id . DAT_FILE_EXT);
+	return $dat_path;
+}
+
+function inc_id ($path) {
+	touch($path);
+
+	$fp = fopen($path, "r+");
+	if ($fp === false) {
+		throw new FileIOError("failed to open id file: $path");
+	}
+
+	$id = null;
+
+	if (flock($fp, LOCK_EX)) {
+		$id = intval(fgets($fp));
+		if ($id === 0) {
+			$id += 1;
+		}
+		fseek($fp, 0, SEEK_SET);
+		fputs($fp, $id + 1);
+	} else {
+		throw new FileIOError("failed to lock id file: $path");
+	}
+	
+	fclose($fp);
+
+	return $id;
+}
 
 function fail_die ($msg) {
 	http_response_code(500);

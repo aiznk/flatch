@@ -60,7 +60,7 @@ class BoardModel extends Model {
 
 	function collect_thread_subjects () {
 		$board_dir = check_path(BOARDS_DIR .'/'. $this->slug);
-		$subject_path = check_path($board_dir .'/'. SUBJECT_FILE_NAME); 
+		$subject_path = check_path($board_dir .'/'. SUBJECTS_FILE_NAME); 
 
 		if (!file_exists($subject_path)) {
 			return [];
@@ -83,6 +83,103 @@ class BoardModel extends Model {
 	}
 }
 
+class SubjectsModel extends Model {
+	public $board_slug; /* String */
+	public $subjects; /* Array<SubjectModel> */
+
+	function load ($board_slug) {
+		if (!$this->is_valid_board_slug($board_slug)) {
+			throw new ValidationError("invalid board slug: $board_slug");
+		}
+
+		$this->board_slug = $board_slug;
+		$subjects_path = gen_board_subjects_path($board_slug);
+
+		$content = file_get_contents($subjects_path);
+		if ($content === false) {
+			throw new FileIOError('failed to read subjects file');
+		}
+
+		$subs_data = explode("\n", trim($content));
+		$subjects = [];
+
+		foreach ($subs_data as $sub_data) {
+			$subject = new SubjectModel();
+			$subject->parse_line($sub_data);
+			$subjects[] = $subject;
+		}
+
+		$this->subjects = $subjects;
+
+		return $this->subjects;
+	}
+
+	function save () {
+		if (!$this->is_valid_board_slug($this->board_slug)) {
+			throw new ValidationError("invalid board slug: $board_slug");
+		}
+
+		$subjects_path = gen_board_subjects_path($this->board_slug);
+
+		$fp = fopen($subjects_path, "w");
+		if ($fp === false) {
+			throw new FileIOError("failed to open subjects file: $subjects_path");
+		}
+
+		if (flock($fp, LOCK_EX)) {
+			foreach ($this->subjects as $subject) {
+				$line = $subject->to_record_line();
+				fputs($fp, $line);
+			}
+		} else {
+			throw new FileIOError("failed to lock subjects file: $subjects_path");
+		}
+
+		fclose($fp);
+	}
+
+	function shrink_tail ($limit) {
+		while (count($this->subjects) > $limit) {
+			array_pop($this->subjects);
+		}
+	}
+
+	function insert_at_first ($subject /* SubjectModel */) {
+		array_unshift($this->subjects, $subject);	
+	}
+}
+
+class SubjectModel extends Model {
+	public $thread_id;
+	public $thread_title;
+
+	function init ($thread_id, $thread_title) {
+		$this->thread_id = $thread_id;
+		$this->thread_title = $thread_title;
+	}
+
+	function parse_line ($line) {
+		$toks = explode(DAT_LINE_SEP, trim($line));
+
+		if (count($toks) < 2) {
+			echo json_encode(['a' => $toks]);
+			exit(1);
+			throw new ParseError("invalid subject tokens length: ". count($toks));
+		}
+
+		$this->thread_id = intval($toks[0]);
+		if ($this->thread_id === 0) {
+			throw new ParseError("invalid thread id of subject line: 0");
+		}
+
+		$this->thread_title = $toks[1];
+	}
+
+	function to_record_line () {
+		return implode(DAT_LINE_SEP, [$this->thread_id, $this->thread_title]) ."\n";
+	}
+}
+
 class ThreadModel extends Model {
 	public $board_slug;
 	public $id;
@@ -99,20 +196,48 @@ class ThreadModel extends Model {
 		$this->id = intval($thread_id);
 	}
 
-	function gen_threads_dir () {
-		$board_dir = check_path(BOARDS_DIR .'/'. $this->board_slug);
-		return check_path($board_dir .'/threads/');		
-	}
+	function create ($board_slug, $title, $name, $email, $content) {
+		// thread
+		$this->board_slug = $board_slug;
+		$this->id = inc_id(THREAD_ID_PATH);	
 
-	function gen_dat_path () {
-		$threads_dir = $this->gen_threads_dir();
-		touch_dirs($threads_dir);
-		$dat_path = check_path($threads_dir .'/'. $this->id . DAT_FILE_EXT); 
-		return $dat_path;
+		$dat_path = gen_dat_path($this->board_slug, $this->id);
+		$record = new RecordModel();
+
+		try {
+			$record->init($name, $email, gen_datetime(), $content, $title);
+		} catch (ValidationError $e) {
+			throw $e;
+		}
+
+		file_put_contents($dat_path, $record->to_record_line(), FILE_APPEND);
+
+		// subject
+		$subjects = new SubjectsModel();
+		
+		try {
+			$subjects->load($this->board_slug);
+		} catch (FileIOError $e) {
+			throw $e;
+		}
+
+		$subject = new SubjectModel();
+		$subject->init($this->id, $title);
+
+		$subjects->shrink_tail(5);
+		$subjects->insert_at_first($subject);
+
+		try {
+			$subjects->save();
+		} catch (FileIOError $e) {
+			throw $e;
+		}
+
+		return $this->id;
 	}
 
 	function parse_records () {
-		$dat_path = $this->gen_dat_path();
+		$dat_path = gen_dat_path($this->board_slug, $this->id);
 
 		if (!file_exists($dat_path)) {
 			throw new FileDoesNotExistsError('dat file does not exists');
@@ -135,16 +260,20 @@ class ThreadModel extends Model {
 	}
 
 	function add_record ($name, $email, $content) {
-		$record = new RecordModel($this->config);
+		$record = new RecordModel();
 
-		$record->init($name, $email, gen_datetime(), $content, '');
+		try {
+			$record->init($name, $email, gen_datetime(), $content, '');
+		} catch (ValidationError $e) {
+			throw $e;
+		}
 
-		$dat_path = $this->gen_dat_path();
+		$dat_path = gen_dat_path($this->board_slug, $this->id);
 		if (!file_exists($dat_path)) {
 			throw new FileDoesNotExistsError('dat file does not exists');
 		}
 
-		file_put_contents($dat_path, $record->to_string(), FILE_APPEND);
+		file_put_contents($dat_path, $record->to_record_line(), FILE_APPEND);
 	}
 }
 
@@ -201,7 +330,7 @@ class RecordModel extends Model {
 		$this->subject = $this->replace_chars($this->subject);
 	}
 
-	function to_string () {
+	function to_record_line () {
 		$record = [
 			$this->name,
 			$this->email,
