@@ -40,13 +40,13 @@ export default class Boards extends nue.Div {
 		this.list = new nue.Ul({ class: 'list' })
 		this.add(this.list)
 
-		let tree = this.mergeCatesAndBoards()
-		this.setListItems(tree)
+		this.mainModel.refBoardsData.onSet((_, data) => {
+			let tree = this.mergeCatesAndBoards(data.categories, data.boards)
+			this.setListItems(tree)			
+		})
 	}
 
-	mergeCatesAndBoards () {
-		let cates = FLATCH.CATEGORIES
-		let boards = FLATCH.BOARDS
+	mergeCatesAndBoards (cates, boards) {
 		let tree = {}
 
 		for (let cate of cates) {

@@ -12,51 +12,63 @@ function gen_datetime () {
 }
 
 class Model {
-	public $config;
-
-	function __construct ($config) {
-		$this->config = $config;
-	}
-
 	function is_valid_board_slug ($board_slug) {
-		foreach ($this->config['boards'] as $board) {
-			if ($board[1] === $board_slug) {
-				return true;
-			}
-		}
-		return false;
+		$board_dir = check_path(BOARDS_DIR .'/'. $board_slug);
+		return file_exists($board_dir);
 	}
 }
 
 class BoardModel extends Model {
-	public $config;
+	public $name;
 	public $slug;
-
-	function __construct ($config) {
-		parent::__construct($config);
-	}
+	public $category_slug;
+	public $desc;
 
 	function init ($board_slug) {
 		if (is_null($board_slug)) {
-			die("board slug is null");
+			fail_die("board slug is null");
 		}
 		if (!$this->is_valid_board_slug($board_slug)) {
-			die("invalid board slug $board_slug");
+			fail_die("invalid board slug $board_slug");
 		}
 
 		$this->slug = $board_slug;
 	}
 
+	function to_array () {
+		return [
+			"name" => $this->name,
+			"slug" => $this->slug,
+			"category_slug" => $this->category_slug,
+			"desc" => $this->desc,
+		];
+	}
+
+	function load_setting () {
+		$board_dir = check_path(BOARDS_DIR .'/'. $this->slug);
+		$setting_path = check_path($board_dir .'/'. BOARD_SETTING_FILE_NAME);
+		if (!file_exists($setting_path)) {
+			throw new FileDoesNotExistsError("not found board setting file: {$this->slug}");
+		}
+
+		$setting = json_decode(file_get_contents($setting_path), true);
+
+		$this->name = $setting['board_name'] ?? null;
+		$this->category_slug = $setting['board_category'] ?? null;
+		$this->desc = $setting['board_desc'] ?? null;
+	}
+
 	function collect_thread_subjects () {
 		$board_dir = check_path(BOARDS_DIR .'/'. $this->slug);
-		touch_dirs($board_dir);
-		
 		$subject_path = check_path($board_dir .'/'. SUBJECT_FILE_NAME); 
-		touch($subject_path);
+
+		if (!file_exists($subject_path)) {
+			return [];
+		}
 
 		$fp = fopen($subject_path, "r");
 		if ($fp === false) {
-			die("failed to open subject file");
+			throw new FileIOError('failed to open subject file');
 		}
 
 		$subjects = [];
@@ -72,13 +84,8 @@ class BoardModel extends Model {
 }
 
 class ThreadModel extends Model {
-	public $config;
 	public $board_slug;
 	public $id;
-
-	function __construct ($config) {
-		parent::__construct($config);
-	}
 
 	function init ($board_slug, $thread_id) {
 		if (!$this->is_valid_board_slug($board_slug)) {
@@ -93,13 +100,14 @@ class ThreadModel extends Model {
 	}
 
 	function gen_threads_dir () {
-		return check_path(BOARDS_DIR .'/'. $this->board_slug .'/threads/');		
+		$board_dir = check_path(BOARDS_DIR .'/'. $this->board_slug);
+		return check_path($board_dir .'/threads/');		
 	}
 
 	function gen_dat_path () {
 		$threads_dir = $this->gen_threads_dir();
 		touch_dirs($threads_dir);
-		$dat_path = check_path($threads_dir .'/'. $this->id .'.dat'); 
+		$dat_path = check_path($threads_dir .'/'. $this->id . DAT_FILE_EXT); 
 		return $dat_path;
 	}
 
@@ -141,16 +149,11 @@ class ThreadModel extends Model {
 }
 
 class RecordModel extends Model {
-	public $config;
 	public $name;
 	public $email;
 	public $datetime;
 	public $content;
 	public $subject;
-
-	function __construct ($config) {
-		parent::__construct($config);
-	}
 
 	function init ($name, $email, $datetime, $content, $subject) {
 		$this->name = $name;
@@ -176,6 +179,7 @@ class RecordModel extends Model {
 		$s = str_replace(">", "&gt;", $s);
 		$s = str_replace('"', "&quot;", $s);
 		$s = str_replace("'", "&apos;", $s);
+		$s = str_replace(",", "&comma;", $s);
 		$s = str_replace("\r", "", $s);
 		$s = str_replace("\n", "<br>", $s);
 		$s = str_replace("\t", "", $s);

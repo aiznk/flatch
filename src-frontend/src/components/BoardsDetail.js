@@ -14,7 +14,7 @@ export default class BoardsDetail extends nue.Div {
 		super({ class: 'boards-detail' })
 		this.mainModel = mainModel
 		this.boardSlug = null /* String */
-		this.board = null /* BoardModel */
+		this.board = new BoardModel()
 
 		this.desc = new Desc()
 		this.add(this.desc)
@@ -23,28 +23,18 @@ export default class BoardsDetail extends nue.Div {
 		this.add(this.threads)
 
 		this.mainModel.refBoardsDetailData.onSet((_, data) => {
+			this.board.parseData(data.board)
+			if (this.board.desc) {
+				this.desc.setText(this.board.desc)
+			}
 			this.setThreadSubjects(data.thread_subjects)
 		})
 	}
 
-	findBoard (slug) {
-		for (let board of FLATCH.BOARDS) {
-			if (slug === board[1]) {
-				return new BoardModel(board)
-			}
-		}
-	}
-
 	init (boardSlug) {
 		this.boardSlug = boardSlug
-		this.board = this.findBoard(boardSlug) /* BoardModel */
-		if (!this.board) {
-			throw new Error('not found board')
-		}
-
-		if (this.board.attrs.desc) {
-			this.desc.setText(this.board.attrs.desc)
-		}
+		this.desc.setText('')
+		this.threads.clear()
 	}
 
 	setThreadSubjects (subjects) {
@@ -53,7 +43,7 @@ export default class BoardsDetail extends nue.Div {
 		for (let sub of subjects) {
 			let thread = new ThreadModel()			
 			thread.parseSubject(sub)
-			thread.boardSlug = this.boardSlug
+			thread.boardSlug = this.board.slug
 			threads.push(thread)
 		}
 

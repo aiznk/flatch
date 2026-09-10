@@ -1,5 +1,7 @@
 <?php
 define('CONFIG_PATH', 'config.json');
+define('BOARDS_PATH', 'boards.json');
+define('CATEGORIES_PATH', 'categories.json');
 define('STATIC_DIR', './static');
 define('INDEX_JS_PATH', STATIC_DIR .'/index.js');
 define('STYLE_CSS_PATH', STATIC_DIR .'/style.css');
@@ -9,7 +11,9 @@ define('BOARDS_DIR_NAME', 'boards');
 define('BOARDS_DIR', DATA_DIR . '/'. BOARDS_DIR_NAME);
 define('THREADS_DIR_NAME', 'threads');
 define('SUBJECT_FILE_NAME', 'subject.dat');
+define('BOARD_SETTING_FILE_NAME', 'setting.json');
 define('DAT_LINE_SEP', '<>');
+define('DAT_FILE_EXT', '.dat');
 define('RES_NAME_MIN_LEN', 0);
 define('RES_NAME_MAX_LEN', 64);
 define('RES_EMAIL_MIN_LEN', 0);

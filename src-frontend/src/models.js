@@ -4,6 +4,8 @@ export class MainModel {
 	constructor () {
 		this.refRoute = nue.ref(null)
 		this.refAppTitle = nue.ref(null)
+		this.refCategoriesList = nue.ref([])
+		this.refBoardsData = nue.ref([])
 		this.refBoardsDetailData = nue.ref(null)
 		this.refThreadsDetailData = nue.ref(null)
 	}
@@ -34,6 +36,23 @@ export class MainModel {
 		}
 	}
 
+	async loadBoardsList () {
+		let response
+		try {
+			response = await fetch(`/?m=api_load_boards_data`)
+		} catch (e) {
+			console.error(e)
+			return
+		}
+		if (response.status !== 200) {
+			let json = await response.json()
+			console.error(json.message)
+			return
+		}
+
+		this.refBoardsData.value = await response.json()
+	}
+
 	async loadBoardsDetail (boardSlug) {
 		let response
 		try {
@@ -43,7 +62,8 @@ export class MainModel {
 			return
 		}
 		if (response.status !== 200) {
-			console.error('failed to load boards detail')
+			let json = await response.json();
+			console.error(json.message)
 			return
 		}
 
@@ -60,6 +80,8 @@ export class MainModel {
 		}
 		if (response.status !== 200) {
 			console.error('failed to load threads detail')
+			let json = await response.json()
+			console.error(json.message)
 			return
 		}
 
@@ -68,11 +90,25 @@ export class MainModel {
 }
 
 export class BoardModel {
-	constructor (data) {
-		this.text = data[0]
-		this.slug = data[1]
-		this.categorySlug = data[2]
-		this.attrs = data.length >= 4 ? data[3] : {}
+	constructor () {
+		this.name = null
+		this.slug = null
+		this.categorySlug = null
+		this.attrs = {}
+	}
+
+	init (name, slug, categorySlug, attrs={}) {
+		this.name = name
+		this.slug = slug
+		this.categorySlug = categorySlug
+		this.attrs = attrs
+	}
+
+	parseData (data /* Object */) {
+		this.name = data.name
+		this.slug = data.slug
+		this.categorySlug = data.category_slug
+		this.desc = data.desc
 	}
 }
 
