@@ -23,13 +23,14 @@ class BoardModel extends Model {
 	public $slug;
 	public $category_slug;
 	public $desc;
+	public $no_name;
 
 	function init ($board_slug) {
 		if (is_null($board_slug)) {
-			fail_die("board slug is null");
+			throw new ValidationError('board slug is null');
 		}
 		if (!$this->is_valid_board_slug($board_slug)) {
-			fail_die("invalid board slug $board_slug");
+			throw new ValidationError("invalid board slug $board_slug");
 		}
 
 		$this->slug = $board_slug;
@@ -56,6 +57,7 @@ class BoardModel extends Model {
 		$this->name = $setting['board_name'] ?? null;
 		$this->category_slug = $setting['board_category'] ?? null;
 		$this->desc = $setting['board_desc'] ?? null;
+		$this->no_name = $setting['board_no_name'] ?? null;
 	}
 
 	function collect_thread_subjects () {

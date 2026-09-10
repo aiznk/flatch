@@ -126,6 +126,19 @@ class Api {
 		$board_slug = $_GET['board_slug'] ?? null;
 		$thread_id = $_GET['thread_id'] ?? null;
 
+		$board = new BoardModel();
+
+		try {
+			$board->init($board_slug);
+		} catch (ValidationError $e) {
+			return $this->echo_exception($e);
+		}
+		try {
+			$board->load_setting();
+		} catch (FileIOError $e) {
+			return $this->echo_exception($e);
+		}
+
 		$thread = new ThreadModel();
 
 		try {
@@ -142,7 +155,8 @@ class Api {
 			return $this->echo_exception($e);
 		}
 
-		$response['board_slug'] = $board_slug;
+		$response['board_slug'] = $board->slug;
+		$response['board_no_name'] = $board->no_name;
 		$response['thread_id'] = $thread_id;
 		$response['thread_records'] = $records;
 

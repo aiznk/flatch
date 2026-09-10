@@ -1,5 +1,6 @@
 {
 	"board_name": "プログラマー",
 	"board_desc": "プログラマ板です。",
-	"board_category": "pc"
+	"board_category": "pc",
+	"board_no_name": "名無しさん"
 }

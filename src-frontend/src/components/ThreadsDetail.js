@@ -3,7 +3,9 @@ import * as i18n from '../i18n.js'
 import { ThreadModel, RecordModel } from '../models.js'
 
 class RecordsItem extends nue.Li {
-	constructor (record /* RecordModel */) {
+	constructor (record /* RecordModel */, {
+		noName=null, /* String */
+	}={}) {
 		super({ class: 'records-item' })
 		this.record = record
 
@@ -18,7 +20,7 @@ class RecordsItem extends nue.Li {
 		this.top.add(this.num)
 
 		this.name = new nue.Span({ class: 'field name' })
-		this.name.setText(this.record.name)
+		this.name.setText(this.record.name || noName)
 		this.top.add(this.name)
 
 		this.email = new nue.Span({ class: 'field email' })
@@ -100,7 +102,8 @@ export default class ThreadsDetail extends nue.Div {
 		this.mainModel = mainModel
 		this.boardSlug = null
 		this.threadId = null
-		this.refTitle = nue.ref(null)
+		this.refThreadName = nue.ref(null)
+		this.refBoardNoName = nue.ref(null)
 
 		this.title = new ThreadTitleWrapper()
 		this.add(this.title)
@@ -111,11 +114,12 @@ export default class ThreadsDetail extends nue.Div {
 		this.postForm = new PostForm()
 		this.add(this.postForm)
 
-		this.refTitle.onSet((_, title) => {
+		this.refThreadName.onSet((_, title) => {
 			this.title.setText(title)
 		})
 		this.mainModel.refThreadsDetailData.onSet((_, data) => {
 			this.boardSlug = data.board_slug
+			this.refBoardNoName.value = data.board_no_name
 			this.threadId = parseInt(data.thread_id)
 			if (isNaN(this.threadId) || this.threadId <= 0) {
 				console.error('invalid thread id')
@@ -135,21 +139,33 @@ export default class ThreadsDetail extends nue.Div {
 		}
 	}
 
+	resetPostForm () {
+		if (this.has(this.postForm)) {
+			this.remove(this.postForm)
+		}
+		this.postForm = new PostForm()
+		this.add(this.postForm)
+	}
+
 	clear () {
+		this.resetPostForm()
 		this.records.clear()
 	}
 
 	setRecordsData (records) {
-		this.refTitle.value = records[0][4]
+		this.refThreadName.value = records[0][4]
 		this.records.clear()
 
 		for (let i = 0; i < records.length; i++) {
 			let rec = records[i]
 			let record = new RecordModel(rec, i+1)
-			let item = new RecordsItem(record)
+			let item = new RecordsItem(record, {
+				noName: this.refBoardNoName.value,
+			})
 			this.records.add(item)
 		}
 		if (this.records.children.length >= FLATCH.LIMIT_DAT_FILE_LINES) {
+			console.log(this.records.children.length, FLATCH.LIMIT_DAT_FILE_LINES)
 			let item = new ReachedLimitItem()
 			this.records.add(item)
 			if (this.has(this.postForm)) {
