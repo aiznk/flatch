@@ -310,7 +310,7 @@ class RecordModel extends Model {
 		$s = str_replace("'", "&apos;", $s);
 		$s = str_replace(",", "&comma;", $s);
 		$s = str_replace("\r", "", $s);
-		$s = str_replace("\n", "<br>", $s);
+		$s = str_replace("\n", "[br]", $s);
 		$s = str_replace("\t", "", $s);
 		$s = str_replace("\v", "", $s);
 		$s = str_replace("\f", "", $s);

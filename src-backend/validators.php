@@ -34,7 +34,7 @@ class RecordValidator {
 			mb_strlen($content) > RES_CONTENT_MAX_LEN ||
 			preg_match(INVALID_RES_REG_EXP, $content) === 1 ||
 			!mb_check_encoding($content, 'UTF-8')) {
-			throw new ValidationError('invalid content');
+			throw new ValidationError("invalid content");
 		}
 		if ($this->subject_empty) {
 			if (is_null($subject) ||

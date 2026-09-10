@@ -20,7 +20,7 @@ class RecordsItem extends nue.Li {
 		this.add(this.datetime)
 
 		this.content = new nue.Div({ class: 'content' })
-		this.content.setText(this.record.content)
+		this.content.setHTML(this.record.parseContentAsHTML())
 		this.add(this.content)
 	}
 }
@@ -65,13 +65,28 @@ class PostForm extends nue.Div {
 	}
 }
 
+class ThreadTitleWrapper extends nue.Div {
+	constructor () {
+		super({ class: 'thread-title-wrapper' })
+		this.h2 = new nue.H2('', { class: 'thread-title' })
+		this.add(this.h2)
+	}
+
+	setText (title) {
+		this.h2.setText(title)
+	}
+}
+
 export default class ThreadsDetail extends nue.Div {
 	constructor (mainModel) {
 		super({ class: 'threads-detail' })
 		this.mainModel = mainModel
 		this.boardSlug = null
 		this.threadId = null
-		this.subject = null
+		this.refTitle = nue.ref(null)
+
+		this.title = new ThreadTitleWrapper()
+		this.add(this.title)
 
 		this.records = new Records()
 		this.add(this.records)
@@ -79,6 +94,9 @@ export default class ThreadsDetail extends nue.Div {
 		this.postForm = new PostForm()
 		this.add(this.postForm)
 
+		this.refTitle.onSet((_, title) => {
+			this.title.setText(title)
+		})
 		this.mainModel.refThreadsDetailData.onSet((_, data) => {
 			this.boardSlug = data.board_slug
 			this.threadId = parseInt(data.thread_id)
@@ -105,7 +123,7 @@ export default class ThreadsDetail extends nue.Div {
 	}
 
 	setRecordsData (records) {
-		this.subject = records[0][5]
+		this.refTitle.value = records[0][4]
 
 		this.records.clear()
 		for (let rec of records) {

@@ -164,4 +164,12 @@ export class RecordModel {
 		this.datetime = data[2]
 		this.content = data[3]
 	}
+
+	parseContentAsHTML () {
+		let content = this.content
+
+		content = content.replaceAll('[br]', '<br>')
+
+		return content
+	}
 }
