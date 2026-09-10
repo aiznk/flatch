@@ -11,25 +11,29 @@ class RecordValidator {
 		if (is_null($name) || 
 			mb_strlen($name) < RES_NAME_MIN_LEN ||
 			mb_strlen($name) > RES_NAME_MAX_LEN ||
-			preg_match(INVALID_RES_REG_EXP, $name) === 1) {
+			preg_match(INVALID_RES_REG_EXP, $name) === 1 ||
+			!mb_check_encoding($name, 'UTF-8')) {
 			throw new ValidationError('invalid name');
 		}
 		if (is_null($email) || 
 			mb_strlen($email) < RES_EMAIL_MIN_LEN ||
 			mb_strlen($email) > RES_EMAIL_MAX_LEN ||
-			preg_match(INVALID_RES_REG_EXP, $email) === 1) {
+			preg_match(INVALID_RES_REG_EXP, $email) === 1 ||
+			!mb_check_encoding($email, 'UTF-8')) {
 			throw new ValidationError('invalid email');
 		}
 		if (is_null($datetime) ||
 			mb_strlen($datetime) < RES_DATETIME_MIN_LEN ||
 			mb_strlen($datetime) > RES_DATETIME_MAX_LEN ||
-			preg_match(INVALID_RES_REG_EXP, $datetime) === 1) {
+			preg_match(INVALID_RES_REG_EXP, $datetime) === 1 ||
+			!mb_check_encoding($datetime, 'UTF-8')) {
 			throw new ValidationError('invalid datetime');
 		}
 		if (is_null($content) || 
 			mb_strlen($content) < RES_CONTENT_MIN_LEN ||
 			mb_strlen($content) > RES_CONTENT_MAX_LEN ||
-			preg_match(INVALID_RES_REG_EXP, $content) === 1) {
+			preg_match(INVALID_RES_REG_EXP, $content) === 1 ||
+			!mb_check_encoding($content, 'UTF-8')) {
 			throw new ValidationError('invalid content');
 		}
 		if ($this->subject_empty) {
@@ -41,7 +45,8 @@ class RecordValidator {
 			if (is_null($subject) || 
 				mb_strlen($subject) < RES_SUBJECT_MIN_LEN ||
 				mb_strlen($subject) > RES_SUBJECT_MAX_LEN ||
-				preg_match(INVALID_RES_REG_EXP, $subject) === 1) {
+				preg_match(INVALID_RES_REG_EXP, $subject) === 1 ||
+				!mb_check_encoding($subject, 'UTF-8')) {
 				throw new ValidationError('invalid subject');
 			}			
 		}
