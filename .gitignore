@@ -1,4 +1,4 @@
-data/boards/prog/threads
+threads/
 static/index.js
 static/style.css
 static/style.css.map
