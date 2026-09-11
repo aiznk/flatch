@@ -9,7 +9,7 @@ function get(jp, en) {
 }
 
 export function reachedLimitMessage () {
-	return get('このスレッドはもう書き込めません。。', 'This thread is not writable.')
+	return get('このスレッドにはもう書き込めません。。', 'This thread reached limit.')
 }
 
 export function createNewThread () {

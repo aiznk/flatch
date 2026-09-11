@@ -42,8 +42,17 @@ class Api {
 			return $this->echo_error("categories file not found");
 		}
 
-		$boards = json_decode(file_get_contents(BOARDS_PATH), true);
-		$categories = json_decode(file_get_contents(CATEGORIES_PATH), true);
+		$boards_content = file_get_contents(BOARDS_PATH);
+		if ($boards_content === false) {
+			return $this->echo_error("failed to get boards content");
+		}
+		$boards = json_decode($boards_content, true);
+
+		$categories_content = file_get_contents(CATEGORIES_PATH);
+		if ($categories_content === false) {
+			return $this->echo_error("failed to get categories content");
+		}
+		$categories = json_decode($categories_content, true);
 
 		$response = [
 			"boards" => $boards,
