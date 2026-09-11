@@ -1,3 +1,7 @@
+export function isDigit (c) {
+	return /[0-9]/.test(c)
+}
+
 export function mergeCatesAndBoards (cates, boards) {
 	let tree = {}
 

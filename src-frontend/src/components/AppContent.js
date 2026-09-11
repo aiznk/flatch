@@ -17,8 +17,8 @@ export default class AppContent extends nue.Div {
 		this.paned.add(this.left)
 		this.right = new nue.Div({ class: 'right' })
 		this.paned.add(this.right)
-		this.paned.setWidth(0, '20%')
-		this.paned.setWidth(1, '80%')
+		this.paned.setWidth(0, '10%')
+		this.paned.setWidth(1, '90%')
 		
 		this.boardsListPanel = new BoardsListPanel(this.mainModel)
 		this.left.add(this.boardsListPanel)

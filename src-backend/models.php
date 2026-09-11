@@ -299,14 +299,12 @@ class RecordModel extends Model {
 	}
 
 	function replace_chars ($s) {
-		$s = str_replace("&", "&amp;", $s);
-		$s = str_replace("<", "&lt;", $s);
-		$s = str_replace(">", "&gt;", $s);
-		$s = str_replace('"', "&quot;", $s);
-		$s = str_replace("'", "&apos;", $s);
-		$s = str_replace(",", "&comma;", $s);
-		$s = str_replace("\r", "", $s);
+		// dat file keywords
+		$s = str_replace("<>", "", $s);
 		$s = str_replace("\n", "[br/]", $s);
+
+		// etc
+		$s = str_replace("\r", "", $s);
 		$s = str_replace("\t", "", $s);
 		$s = str_replace("\v", "", $s);
 		$s = str_replace("\f", "", $s);

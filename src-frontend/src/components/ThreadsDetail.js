@@ -32,7 +32,10 @@ class RecordsItem extends nue.Li {
 		this.top.add(this.datetime)
 
 		this.content = new nue.Div({ class: 'field content' })
-		this.content.setHTML(this.record.parseContentAsHTML())
+
+		let components = this.record.parseContentAsComponents()
+		this.content.add(components)
+
 		this.bottom.add(this.content)
 	}
 }

@@ -114,6 +114,11 @@ html, body, #app, .root {
 	}
 }
 
+.anchor {
+	.elem:not(:last-child):after {
+		content: ","
+	}
+}
 /* nue */
 
 .nue_paned-frame {

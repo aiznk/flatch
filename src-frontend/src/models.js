@@ -1,5 +1,6 @@
 import * as nue from './nue/nue.js'
 import { Cache } from './cache.js'
+import { RecordContentParser } from './parsers.js'
 
 export class MainModel {
 	constructor () {
@@ -175,11 +176,9 @@ export class RecordModel {
 		this.content = data[3]
 	}
 
-	parseContentAsHTML () {
-		let content = this.content
-
-		content = content.replaceAll('[br/]', '<br/>')
-
-		return content
+	parseContentAsComponents () {
+		let parser = new RecordContentParser()
+		let components = parser.parse(this.content)
+		return components
 	}
 }
