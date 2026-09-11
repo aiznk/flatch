@@ -118,4 +118,9 @@ class Loader {
 		$path = gen_board_subjects_path($board_slug);
 		return $this->load_dat_file_with_cache("subjects", $path, $cache);
 	}
+
+	function load_thread_dat_file ($board_slug, $thread_id, $cache=true) {
+		$path = gen_dat_path($board_slug, $thread_id);
+		return $this->load_dat_file_with_cache("thread", $path, $cache);
+	}
 }

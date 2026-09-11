@@ -11,6 +11,83 @@ export class MainModel {
 		this.refBoardsData = nue.ref([])
 		this.refBoardsDetailData = nue.ref(null)
 		this.refThreadsDetailData = nue.ref(null)
+		this.refAnchorRecordsData = nue.ref(null)
+	}
+
+	async loadRecordsByAnchorNums (
+		boardSlug, 
+		threadId, 
+		anchorNums,
+		clientX,
+		clientY,
+	) {
+		let data
+		let cacheKey = `anchorRecordsData.${boardSlug}.${threadId}`
+
+		if (this.cache.has(cacheKey)) {
+			data = this.cache.get(cacheKey)
+		} else {
+			let response
+			const url = `/?m=api_load_threads_detail&board_slug=${boardSlug}&thread_id=${threadId}`
+
+			try {
+				response = await fetch(url)
+			} catch (e) {
+				console.error(e)
+				return
+			}
+
+			if (response.status !== 200) {
+				let json = await response.json()
+				console.error(json.message)
+				return
+			}
+
+			data = await response.json()
+			this.cache.set(cacheKey, data)
+		}
+
+		data.client_x = clientX
+		data.client_y = clientY
+		data.anchor_nums = anchorNums
+
+		data.anchor_records = this.findAnchorRecords(data.thread_records, anchorNums)
+		
+		this.refAnchorRecordsData.value = data
+	}
+
+	findAnchorRecords (records, nums) {
+		let ret = []
+
+		if (nums.length === 1) {
+			for (let i = 0; i < records.length; i++) {
+				let id = i+1
+				if (nums.includes(id)) {
+					ret.push(records[i])
+					break
+				}
+			}
+		} else if (nums.length === 2) {
+			let m = 0
+			for (let i = 0; i < records.length; i++) {
+				let id = i+1
+				if (m === 0) {
+					if (id == nums[0]) {
+						ret.push(records[i])
+						m = 1
+					}
+				} else if (m === 1) {
+					if (id == nums[1]) {
+						ret.push(records[i])
+						break
+					} else {
+						ret.push(records[i])
+					}
+				}
+			}			
+		}
+
+		return ret
 	}
 
 	async postThread (boardSlug, threadName, name, email, content) {
@@ -176,8 +253,8 @@ export class RecordModel {
 		this.content = data[3]
 	}
 
-	parseContentAsComponents () {
-		let parser = new RecordContentParser()
+	parseContentAsComponents (boardSlug, threadId) {
+		let parser = new RecordContentParser(boardSlug, threadId)
 		let components = parser.parse(this.content)
 		return components
 	}

@@ -40,7 +40,7 @@ class Api {
 
 		return false;
 	}
-
+	
 	function load_boards_data () {
 		try {
 			$boards = $this->loader->load_boards_json_file();

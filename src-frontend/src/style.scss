@@ -4,6 +4,7 @@ $link-color: blue;
 $link-color-hover: red;
 $t-sec: 0.3s;
 $color-black: black;
+$border-radius: 6px;
 
 * {
 	margin: 0;
@@ -119,6 +120,15 @@ html, body, #app, .root {
 		content: ","
 	}
 }
+
+.popup-anchor-records {
+	position: absolute;
+	background: white;
+	border: 1px solid $color-black;
+	border-radius: $border-radius;
+	padding: calc($pad-y) calc($pad-x);
+}
+
 /* nue */
 
 .nue_paned-frame {

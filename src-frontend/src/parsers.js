@@ -1,61 +1,11 @@
 import * as nue from './nue/nue.js'
 import { isDigit } from './utils.js'
-
-class AnchorTagElem extends nue.Span {
-	constructor (nums) {
-		super({
-			class: 'elem link',
-		}, {
-			events: ['click'],
-		})
-		this.nums = nums
-		this.setText(this.toText())
-	}
-
-	onClick (ev) {
-		alert(this.nums.length)
-	}
-
-	toText () {
-		let s = ''
-
-		if (this.nums.length === 1) {
-			return '' + this.nums[0]
-		} else {
-			return this.nums.join('-')
-		}
-
-		return s
-	}
-}
-
-class AnchorTag extends nue.Span {
-	constructor () {
-		super({ 
-			class: 'anchor'
-		})
-		let anchor = new nue.Span()
-		anchor.setText('>>')
-		this.add(anchor)
-	}
-
-	parseLine (line) {
-		for (let m of line.split(',')) {
-			if (/[0-9]+\-[0-9]+/.test(m)) {
-				let nums = m.split('-')
-				nums = nums.map(n => parseInt(n))
-				let el = new AnchorTagElem(nums)
-				this.add(el)
-			} else {
-				let el = new AnchorTagElem([parseInt(m)])
-				this.add(el)
-			}
-		}
-	}
-}
+import { AnchorTag } from './anchor.js'
 
 export class RecordContentParser {
-	constructor () {
+	constructor (boardSlug, threadId) {
+		this.boardSlug = boardSlug
+		this.threadId = threadId
 		this.root = null
 		this.content = null
 		this.i = 0
@@ -143,7 +93,7 @@ export class RecordContentParser {
 		let m = 0
 		let buf = ''
 		let line = ''		
-		let anchor = new AnchorTag()
+		let anchor = new AnchorTag(this.boardSlug, this.threadId)
 		let i = 0
 
 		for (i = this.i; i < this.content.length; i++) {

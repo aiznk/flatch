@@ -182,6 +182,25 @@ class ThreadModel extends Model {
 		$this->id = intval($thread_id);
 	}
 
+	function find_anchor_records ($records, $ids) {
+		if (!is_array($ids)) {
+			throw new ValueError('invalid id array');
+		}
+
+		$ids = array_map(function ($el) { return intval($el); }, $ids);
+		$ret = [];
+		$len = count($records);
+
+		for ($i = 0; $i < $len; $i++) {
+			$id = $i+1;
+			if (in_array($id, $ids)) {
+				$ret[] = $records[$i];
+			}
+		}
+
+		return $ret;
+	}
+
 	function create ($board_slug, $thread_name, $name, $email, $content) {
 		// thread
 		$this->board_slug = $board_slug;
@@ -225,24 +244,8 @@ class ThreadModel extends Model {
 	}
 
 	function parse_records () {
-		$dat_path = gen_dat_path($this->board_slug, $this->id);
-
-		if (!file_exists($dat_path)) {
-			throw new FileDoesNotExistsError('dat file does not exists');
-		}
-
-		$fp = fopen($dat_path, "r");
-		if ($fp === false) {
-			throw new FileIOError("failed to open dat file $dat_file");
-		}
-
-		$records = [];
-
-		while (($record = parse_dat_stream_line($fp)) !== false) {
-			$records[] = $record;
-		}
-
-		fclose($fp);
+		$loader = new Loader();
+		$records = $loader->load_thread_dat_file($this->board_slug, $this->id);
 
 		return $records;
 	}
