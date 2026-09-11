@@ -22,10 +22,10 @@ export class MainModel {
 		clientY,
 	) {
 		let data
-		let cacheKey = `anchorRecordsData.${boardSlug}.${threadId}`
+		let ckey = `anchorRecordsData.${boardSlug}.${threadId}`
 
-		if (this.cache.has(cacheKey)) {
-			data = this.cache.get(cacheKey)
+		if (this.cache.has(ckey)) {
+			data = this.cache.get(ckey)
 		} else {
 			let response
 			const url = `/?m=api_load_threads_detail&board_slug=${boardSlug}&thread_id=${threadId}`
@@ -44,7 +44,7 @@ export class MainModel {
 			}
 
 			data = await response.json()
-			this.cache.set(cacheKey, data)
+			this.cache.set(ckey, data)
 		}
 
 		data.client_x = clientX
@@ -52,7 +52,7 @@ export class MainModel {
 		data.anchor_nums = anchorNums
 
 		data.anchor_records = this.findAnchorRecords(data.thread_records, anchorNums)
-		
+
 		this.refAnchorRecordsData.value = data
 	}
 
@@ -170,38 +170,58 @@ export class MainModel {
 	}
 
 	async loadBoardsDetail (boardSlug) {
-		let response
-		try {
-			response = await fetch(`/?m=api_load_boards_detail&board_slug=${boardSlug}`)
-		} catch (e) {
-			console.error(e)
-			return
-		}
-		if (response.status !== 200) {
-			let json = await response.json();
-			console.error(json.message)
-			return
+		const ckey = `boardsDetail.${boardSlug}`
+		let data
+
+		if (this.cache.has(ckey)) {
+			data = this.cache.get(ckey)
+		} else {
+			let response
+			try {
+				response = await fetch(`/?m=api_load_boards_detail&board_slug=${boardSlug}`)
+			} catch (e) {
+				console.error(e)
+				return
+			}
+			if (response.status !== 200) {
+				let json = await response.json();
+				console.error(json.message)
+				return
+			}
+
+			data = await response.json()
+			this.cache.set(ckey, data)
 		}
 
-		this.refBoardsDetailData.value = await response.json()
+		this.refBoardsDetailData.value = data
 	}
 
 	async loadThreadsDetail (boardSlug, threadId) {
-		let response
-		try {
-			response = await fetch(`/?m=api_load_threads_detail&board_slug=${boardSlug}&thread_id=${threadId}`)
-		} catch (e) {
-			console.error(e)
-			return
-		}
-		if (response.status !== 200) {
-			console.error('failed to load threads detail')
-			let json = await response.json()
-			console.error(json.message)
-			return
+		const ckey = `threadsDetail.${boardSlug}.${threadId}`
+		let data
+
+		if (this.cache.has(ckey)) {
+			data = this.cache.get(ckey)
+		} else {
+			let response
+			try {
+				response = await fetch(`/?m=api_load_threads_detail&board_slug=${boardSlug}&thread_id=${threadId}`)
+			} catch (e) {
+				console.error(e)
+				return
+			}
+			if (response.status !== 200) {
+				console.error('failed to load threads detail')
+				let json = await response.json()
+				console.error(json.message)
+				return
+			}
+
+			data = await response.json()
+			this.cache.set(ckey, data)
 		}
 
-		this.refThreadsDetailData.value = await response.json()		
+		this.refThreadsDetailData.value = data
 	}
 }
 

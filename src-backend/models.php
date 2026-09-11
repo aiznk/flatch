@@ -182,25 +182,6 @@ class ThreadModel extends Model {
 		$this->id = intval($thread_id);
 	}
 
-	function find_anchor_records ($records, $ids) {
-		if (!is_array($ids)) {
-			throw new ValueError('invalid id array');
-		}
-
-		$ids = array_map(function ($el) { return intval($el); }, $ids);
-		$ret = [];
-		$len = count($records);
-
-		for ($i = 0; $i < $len; $i++) {
-			$id = $i+1;
-			if (in_array($id, $ids)) {
-				$ret[] = $records[$i];
-			}
-		}
-
-		return $ret;
-	}
-
 	function create ($board_slug, $thread_name, $name, $email, $content) {
 		// thread
 		$this->board_slug = $board_slug;
