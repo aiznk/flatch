@@ -24,6 +24,15 @@ html, body, #app, .root {
 .app-content {
 	border: 1px solid red;
 	flex: 1;
+	min-height: 0;
+	.paned-frame {
+		.left {
+			overflow-y: scroll;
+		}
+		.right {
+			overflow-y: scroll;
+		}
+	}
 }
 .link {
 	cursor: pointer;
@@ -78,16 +87,22 @@ html, body, #app, .root {
 		display: block;
 	}
 }
-.records-item {
-	.top {
-		.field {
-			margin-left: calc($pad-x*0.2);
-		}	
+.records {
+	list-style: none;
+
+	.records-item {
+		.top {
+			.field {
+				margin-left: calc($pad-x*0.2);
+			}	
+		}
+	}
+	.records-item:not(:last-child) {
+		margin-bottom: calc($pad-y);
 	}
 }
-.records-item:not(:last-child) {
-	margin-bottom: calc($pad-y);
-}
+
+/* nue */
 
 .nue_paned-frame {
 	display: flex;
