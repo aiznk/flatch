@@ -37,7 +37,7 @@ html, body, #app, .root {
 	color: $link-color-hover;
 	text-decoration: none;
 }
-.boards {
+.boards.table {
 	.list {
 		display: flex;
 		list-style: none;
@@ -49,6 +49,14 @@ html, body, #app, .root {
 	}
 	.separate-item:before {
 		content: "/";
+	}
+}
+.boards.list {
+	.list {
+		list-style: none;
+	}
+	.category-item:not(:first-child) {
+		margin-top: calc($pad-y*0.8);
 	}
 }
 .post-form {

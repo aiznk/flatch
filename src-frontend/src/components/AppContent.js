@@ -98,7 +98,7 @@ export default class AppContent extends nue.Div {
 			this.showOnly('home')
 			break
 		case `/${FLATCH.BOARDS_DIR_NAME}`:
-			await this.mainModel.loadBoardsList()
+			await this.mainModel.loadBoardsData()
 			this.showOnly('boards')
 			break
 		}

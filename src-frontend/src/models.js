@@ -1,7 +1,9 @@
 import * as nue from './nue/nue.js'
+import { Cache } from './cache.js'
 
 export class MainModel {
 	constructor () {
+		this.cache = new Cache()
 		this.refRoute = nue.ref(null)
 		this.refAppName = nue.ref(null)
 		this.refCategoriesList = nue.ref([])
@@ -66,7 +68,11 @@ export class MainModel {
 		}
 	}
 
-	async loadBoardsList () {
+	async loadBoardsData () {
+		if (this.cache.has('boardsData')) {
+			return this.cache.get('boardsData')
+		}
+
 		let response
 		try {
 			response = await fetch(`/?m=api_load_boards_data`)
@@ -80,7 +86,9 @@ export class MainModel {
 			return
 		}
 
-		this.refBoardsData.value = await response.json()
+		let json = await response.json()
+		this.cache.set('boardsData', json)
+		this.refBoardsData.value = json
 	}
 
 	async loadBoardsDetail (boardSlug) {

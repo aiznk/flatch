@@ -1,5 +1,6 @@
 import * as nue from '../nue/nue.js'
 import * as i18n from '../i18n.js'
+import { mergeCatesAndBoards } from '../utils.js'
 
 class Separateitem extends nue.Li {
 	constructor () {
@@ -33,34 +34,21 @@ class BoardItem extends nue.Li {
 }
 
 export default class Boards extends nue.Div {
-	constructor (mainModel) {
+	constructor (mainModel, {
+		kind='table',
+	}={}) {
 		super({ class: 'boards' })
 		this.mainModel = mainModel
+		this.kind = kind // table, list
+		this.addClass(kind)
 
 		this.list = new nue.Ul({ class: 'list' })
 		this.add(this.list)
 
 		this.mainModel.refBoardsData.onSet((_, data) => {
-			let tree = this.mergeCatesAndBoards(data.categories, data.boards)
+			let tree = mergeCatesAndBoards(data.categories, data.boards)
 			this.setListItems(tree)			
 		})
-	}
-
-	mergeCatesAndBoards (cates, boards) {
-		let tree = {}
-
-		for (let cate of cates) {
-			tree[cate[1]] = [cate]
-		}
-
-		for (let board of boards) {
-			if (!(board[2] in tree)) {
-				throw new Error(`not found slug in tree: "${board[2]}"`)
-			}
-			tree[board[2]].push(board)
-		}
-
-		return tree
 	}
 
 	setListItems (tree) {
