@@ -19,7 +19,19 @@ html, body, #app, .root {
 }
 .app-header {
 	display: flex;
-	justify-content: start;
+	justify-content: center;
+	padding: calc($pad-y*0.5) calc($pad-x*0.5);
+
+	.app-title {
+		font-size: 1rem;
+	}
+	.main-menu {
+		display: flex;
+		margin-left: 1rem;
+		.menu-item:not(:first-child) {
+			margin-left: 1rem;
+		}
+	}
 }
 .app-content {
 	border: 1px solid red;
