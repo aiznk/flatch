@@ -4,6 +4,7 @@ require_once __dir__ .'/consts.php';
 require_once __dir__ .'/utils.php';
 require_once __dir__ .'/excepts.php';
 require_once __dir__ .'/validators.php';
+require_once __dir__ .'/loader.php';
 
 function gen_datetime () {
 	$weekdays = ['日', '月', '火', '水', '木', '金', '土'];
@@ -46,13 +47,8 @@ class BoardModel extends Model {
 	}
 
 	function load_setting () {
-		$board_dir = check_path(BOARDS_DIR .'/'. $this->slug);
-		$setting_path = check_path($board_dir .'/'. BOARD_SETTING_FILE_NAME);
-		if (!file_exists($setting_path)) {
-			throw new FileDoesNotExistsError("not found board setting file: {$this->slug}");
-		}
-
-		$setting = json_decode(file_get_contents($setting_path), true);
+		$loader = new Loader();
+		$setting = $loader->load_board_setting_json_file($this->slug);
 
 		$this->name = $setting['board_name'] ?? null;
 		$this->category_slug = $setting['board_category'] ?? null;
@@ -95,24 +91,15 @@ class SubjectsModel extends Model {
 		}
 
 		$this->board_slug = $board_slug;
-		$subjects_path = gen_board_subjects_path($board_slug);
 
-		if (!file_exists($subjects_path)) {
-			$this->subjects = [];
-			return $this->subjects;
-		}
+		$loader = new Loader();
 
-		$content = file_get_contents($subjects_path);
-		if ($content === false) {
-			throw new FileIOError('failed to read subjects file');
-		}
-
-		$subs_data = explode("\n", trim($content));
+		$table = $loader->load_subjects_dat_file($board_slug);
 		$subjects = [];
 
-		foreach ($subs_data as $sub_data) {
+		foreach ($table as $row) {
 			$subject = new SubjectModel();
-			$subject->parse_line($sub_data);
+			$subject->set_array($row);
 			$subjects[] = $subject;
 		}
 
@@ -165,19 +152,13 @@ class SubjectModel extends Model {
 		$this->thread_name = $thread_name;
 	}
 
-	function parse_line ($line) {
-		$toks = explode(DAT_LINE_SEP, trim($line));
-
-		if (count($toks) < 2) {
-			throw new ParseError("invalid subject tokens length: ". count($toks));
+	function set_array ($row) {
+		if (count($row) !== 2) {
+			throw new ValueError('invalid row length');
 		}
 
-		$this->thread_id = intval($toks[0]);
-		if ($this->thread_id === 0) {
-			throw new ParseError("invalid thread id of subject line: 0");
-		}
-
-		$this->thread_name = $toks[1];
+		$this->thread_id = $row[0];
+		$this->thread_name = $row[1];
 	}
 
 	function to_record_line () {
@@ -222,6 +203,8 @@ class ThreadModel extends Model {
 		
 		try {
 			$subjects->load($this->board_slug);
+		} catch (FileDoesNotExistsError $e) {
+			throw $e;
 		} catch (FileIOError $e) {
 			throw $e;
 		}

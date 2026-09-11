@@ -3,8 +3,15 @@ namespace fc;
 require_once __dir__ .'/excepts.php';
 require_once __dir__ .'/utils.php';
 require_once __dir__ .'/models.php';
+require_once __dir__ .'/loader.php';
 
 class Api {
+	public Loader $loader;
+
+	function __construct () {
+		$this->loader = new Loader();
+	}
+
 	function echo_exception ($e) {
 		http_response_code(500);
 		echo json_encode([
@@ -35,24 +42,14 @@ class Api {
 	}
 
 	function load_boards_data () {
-		if (!file_exists(BOARDS_PATH)) {
-			return $this->echo_error("boards file not found");
+		try {
+			$boards = $this->loader->load_boards_json_file();
+			$categories = $this->loader->load_categories_json_file();
+		} catch (FileIOError $e) {
+			return $this->echo_exception($e);
+		} catch (FileDoesNotExistsError $e) {
+			return $this->echo_exception($e);
 		}
-		if (!file_exists(CATEGORIES_PATH)) {
-			return $this->echo_error("categories file not found");
-		}
-
-		$boards_content = file_get_contents(BOARDS_PATH);
-		if ($boards_content === false) {
-			return $this->echo_error("failed to get boards content");
-		}
-		$boards = json_decode($boards_content, true);
-
-		$categories_content = file_get_contents(CATEGORIES_PATH);
-		if ($categories_content === false) {
-			return $this->echo_error("failed to get categories content");
-		}
-		$categories = json_decode($categories_content, true);
 
 		$response = [
 			"boards" => $boards,
@@ -143,6 +140,8 @@ class Api {
 
 		try {
 			$board->load_setting();
+		} catch (FileIOError $e) {
+			return $this->echo_exception($e);			
 		} catch (FileDoesNotExistsError $e) {
 			return $this->echo_exception($e);
 		}

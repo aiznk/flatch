@@ -63,9 +63,13 @@ class App {
 	}
 
 	function run () {
-		$this->setup();
-		$this->routing();
-		$this->cleanup();
+		try {
+			$this->setup();
+			$this->routing();
+			$this->cleanup();
+		} catch (\Exception $e) {
+			fail_die($e->getMessage());
+		}
 	}
 
 	function routing () {
