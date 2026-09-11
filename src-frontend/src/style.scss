@@ -3,6 +3,7 @@ $pad-x: 1.414rem;
 $link-color: blue;
 $link-color-hover: red;
 $t-sec: 0.3s;
+$color-black: black;
 
 * {
 	margin: 0;
@@ -79,3 +80,22 @@ html, body, #app, .root {
 .records-item:not(:last-child) {
 	margin-bottom: calc($pad-y);
 }
+
+.nue_paned-frame {
+	display: flex;
+	height: 100%;
+}
+.nue_paned-frame--vertical {
+	flex-direction: column;
+}
+.nue_paned-frame__divid {
+	cursor: grab;
+	background: $color-black;
+}
+.nue_paned-frame__divid--horizontal {
+	width: 2px;
+}
+.nue_paned-frame__divid--vertical {
+	height: 2px;
+}
+

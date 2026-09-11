@@ -2,6 +2,7 @@ import * as nue from '../nue/nue.js'
 import * as i18n from '../i18n.js'
 import Home from './Home.js'
 import Boards from './Boards.js'
+import BoardsListPanel from './BoardsListPanel.js'
 import BoardsDetail from './BoardsDetail.js'
 import ThreadsDetail from './ThreadsDetail.js'
 
@@ -10,20 +11,32 @@ export default class AppContent extends nue.Div {
 		super({ class: 'app-content' })
 		this.mainModel = mainModel
 
+		this.paned = new nue.PanedFrame('horizontal', { class: 'paned-frame' })
+		this.add(this.paned)
+		this.left = new nue.Div({ class: 'left' })
+		this.paned.add(this.left)
+		this.right = new nue.Div({ class: 'right' })
+		this.paned.add(this.right)
+		this.paned.setWidth(0, '20%')
+		this.paned.setWidth(1, '80%')
+		
+		this.boardsListPanel = new BoardsListPanel(this.mainModel)
+		this.left.add(this.boardsListPanel)
+
 		this.home = new Home(this.mainModel)
-		this.add(this.home)
+		this.right.add(this.home)
 
 		this.boards = new Boards(this.mainModel)
 		this.boards.hide()
-		this.add(this.boards)
+		this.right.add(this.boards)
 
 		this.boardsDetail = new BoardsDetail(this.mainModel)
 		this.boardsDetail.hide()
-		this.add(this.boardsDetail)
+		this.right.add(this.boardsDetail)
 
 		this.threadsDetail = new ThreadsDetail(this.mainModel)
 		this.threadsDetail.hide()
-		this.add(this.threadsDetail)
+		this.right.add(this.threadsDetail)
 
 		this.mainModel.refRoute.onSet(async (_, path) => {
 			await this.showPath(path)
