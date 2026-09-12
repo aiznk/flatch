@@ -16,6 +16,7 @@ class App {
 	function draw_initial_data () {
 		$app_name = $this->config['app_name'] ?? DEF_APP_TITLE;
 		$welcome_message = $this->config['welcome_message'] ?? 'Welcome';
+		$theme = $this->config['theme'] ?? 'light';
 	?>
 		<script>
 			var FLATCH = {
@@ -23,11 +24,13 @@ class App {
 				WELCOME_MESSAGE: "<?= safe($welcome_message) ?>",
 				HOME_DISPLAY_BOARD: "<?= safe($this->config['home_display_board'] ?? '') ?>",
 				HOME_THREADS_PER_PAGE: <?= HOME_THREADS_PER_PAGE ?>,
+				THEME: "<?= safe($theme) ?>",
 				PUBLISHED_DATE: "<?= safe($this->config['published_date']) ?>",
 				BOARDS_DIR_NAME: "<?= BOARDS_DIR_NAME ?>",
 				THREADS_DIR_NAME: "<?= THREADS_DIR_NAME ?>",
 				LIMIT_DAT_FILE_LINES: <?= LIMIT_DAT_FILE_LINES ?>,
 			}
+			document.documentElement.dataset.theme = FLATCH.THEME === 'dark' ? 'dark' : 'light'
 		</script>
 	<?php
 	}
