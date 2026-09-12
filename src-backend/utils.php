@@ -3,6 +3,14 @@ namespace fc;
 require_once __dir__ .'/consts.php';
 require_once __dir__ .'/excepts.php';
 
+function header_text_html_utf8 () {
+	header('Content-Type: text/html; charset=UTF-8');
+}
+
+function header_app_json_utf8 () {
+	header('Content-Type: application/json; charset=UTF-8');
+}
+
 function count_file_lines(string $filename): int {
     $fp = fopen($filename, 'rb');
     if ($fp === false) {
