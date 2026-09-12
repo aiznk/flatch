@@ -73,14 +73,16 @@ export default class Root extends nue.Root {
 	}
 
 	async clickPostRecordBtn (ev) {
-		await this.mainModel.postRecord(
+		let result = await this.mainModel.postRecord(
 			ev.boardSlug, 
 			ev.threadId, 
 			ev.name, 
 			ev.email, 
 			ev.content,
-			ev.resetForm,
 		)
+		if (result) {
+			ev.resetForm()
+		}
 	}
 
 	clickBoardItem (ev) {

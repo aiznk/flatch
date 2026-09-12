@@ -122,7 +122,7 @@ export class MainModel {
 		return json
 	}
 
-	async postRecord (boardSlug, threadId, name, email, content, resetForm) {
+	async postRecord (boardSlug, threadId, name, email, content) {
 		const data = new FormData()
 
 		data.append('board_slug', boardSlug)
@@ -139,17 +139,18 @@ export class MainModel {
 			})
 		} catch (e) {
 			console.error(e)
-			return
+			return false
 		}
 
 		if (response.status !== 200) {
 			let json = await response.json()
 			console.error(json.message)
-			return
+			return false
 		}
 
 		await this.loadThreadsDetail(boardSlug, threadId, false)
-		resetForm()
+
+		return true
 	}
 
 	async loadBoardsData (cache=true) {
