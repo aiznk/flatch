@@ -41,7 +41,7 @@ export default class Root extends nue.Root {
 		case 'postThread': await this.postThread(val); break
 		case 'linkClick': this.linkClick(val); break
 		case 'clickBoardItem': this.clickBoardItem(val); break
-		case 'clickPostBtn': await this.clickPostBtn(val); break
+		case 'clickPostRecordBtn': await this.clickPostRecordBtn(val); break
 		}
 	}
 
@@ -65,7 +65,7 @@ export default class Root extends nue.Root {
 		)
 	}
 
-	async clickPostBtn (ev) {
+	async clickPostRecordBtn (ev) {
 		await this.mainModel.postRecord(
 			ev.boardSlug, 
 			ev.threadId, 

@@ -4,7 +4,7 @@ import { ThreadModel, RecordModel } from '../models.js'
 import RecordsItem from './RecordsItem.js'
 import Records from './Records.js'
 
-class PostForm extends nue.Div {
+class PostRecordForm extends nue.Div {
 	constructor () {
 		super({ class: 'post-form' })
 
@@ -30,7 +30,7 @@ class PostForm extends nue.Div {
 			ev.name = this.name.getValue()
 			ev.email = this.email.getValue()
 			ev.content = this.content.getValue()
-			await this.emit('clickPostBtn', ev)
+			await this.emit('clickPostRecordBtn', ev)
 		}, {
 			class: 'post-btn',
 		})
@@ -72,8 +72,8 @@ export default class ThreadsDetail extends nue.Div {
 		this.records = new Records(mainModel)
 		this.add(this.records)
 
-		this.postForm = new PostForm()
-		this.add(this.postForm)
+		this.postRecordForm = new PostRecordForm()
+		this.add(this.postRecordForm)
 
 		this.refThreadName.onSet((_, title) => {
 			this.title.setText(title)
@@ -92,7 +92,7 @@ export default class ThreadsDetail extends nue.Div {
 	receive (key, val) {
 		switch (key) {
 		default: this.emit(key, val); break
-		case 'clickPostBtn':
+		case 'clickPostRecordBtn':
 			val.boardSlug = this.boardSlug
 			val.threadId = this.threadId
 			this.emit(key, val)
@@ -101,11 +101,11 @@ export default class ThreadsDetail extends nue.Div {
 	}
 
 	resetPostForm () {
-		if (this.has(this.postForm)) {
-			this.remove(this.postForm)
+		if (this.has(this.postRecordForm)) {
+			this.remove(this.postRecordForm)
 		}
-		this.postForm = new PostForm()
-		this.add(this.postForm)
+		this.postRecordForm = new PostRecordForm()
+		this.add(this.postRecordForm)
 	}
 
 	clear () {
@@ -132,8 +132,8 @@ export default class ThreadsDetail extends nue.Div {
 		if (this.records.children.length >= FLATCH.LIMIT_DAT_FILE_LINES) {
 			let item = new ReachedLimitItem()
 			this.records.add(item)
-			if (this.has(this.postForm)) {
-				this.remove(this.postForm)
+			if (this.has(this.postRecordForm)) {
+				this.remove(this.postRecordForm)
 			}
 		}
 	}

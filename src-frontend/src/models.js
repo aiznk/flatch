@@ -20,11 +20,12 @@ export class MainModel {
 		anchorNums,
 		clientX,
 		clientY,
+		cache=true,
 	) {
 		let data
 		let ckey = `anchorRecordsData.${boardSlug}.${threadId}`
 
-		if (this.cache.has(ckey)) {
+		if (cache && this.cache.has(ckey)) {
 			data = this.cache.get(ckey)
 		} else {
 			let response
@@ -144,10 +145,12 @@ export class MainModel {
 			let json = await response.json()
 			console.error(json.message)
 		}
+
+		await this.loadThreadsDetail(boardSlug, threadId, false)
 	}
 
-	async loadBoardsData () {
-		if (this.cache.has('boardsData')) {
+	async loadBoardsData (cache=true) {
+		if (cache && this.cache.has('boardsData')) {
 			return this.cache.get('boardsData')
 		}
 
@@ -169,11 +172,11 @@ export class MainModel {
 		this.refBoardsData.value = json
 	}
 
-	async loadBoardsDetail (boardSlug) {
+	async loadBoardsDetail (boardSlug, cache=true) {
 		const ckey = `boardsDetail.${boardSlug}`
 		let data
 
-		if (this.cache.has(ckey)) {
+		if (cache && this.cache.has(ckey)) {
 			data = this.cache.get(ckey)
 		} else {
 			let response
@@ -196,11 +199,11 @@ export class MainModel {
 		this.refBoardsDetailData.value = data
 	}
 
-	async loadThreadsDetail (boardSlug, threadId) {
+	async loadThreadsDetail (boardSlug, threadId, cache=true) {
 		const ckey = `threadsDetail.${boardSlug}.${threadId}`
 		let data
 
-		if (this.cache.has(ckey)) {
+		if (cache && this.cache.has(ckey)) {
 			data = this.cache.get(ckey)
 		} else {
 			let response
