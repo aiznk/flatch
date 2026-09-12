@@ -125,6 +125,32 @@ class Api {
 			return $this->echo_exception($e);
 		}
 
+		if ($email !== "sage") {
+			$subjects = new SubjectsModel();
+
+			try {
+				$subjects->load($board_slug);	
+			} catch (ValidationError $e) {
+				return $this->echo_exception($e);
+			} catch (FileIOError $e) {
+				return $this->echo_exception($e);
+			}
+
+			$subject = $subjects->find_by_thread_id($thread_id);
+			if (!is_null($subject)) {
+				$subjects->remove($subject);
+				$subjects->insert_at_first($subject);
+				
+				try {
+					$subjects->save();
+				} catch (ValidationError $e) {
+					return $this->echo_exception($e);
+				} catch (FileIOError $e) {
+					return $this->echo_exception($e);
+				}
+			}
+		}
+
 		$this->set_last_post_time();
 
 		echo json_encode([]);

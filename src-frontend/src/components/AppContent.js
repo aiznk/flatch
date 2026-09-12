@@ -73,7 +73,7 @@ export default class AppContent extends nue.Div {
 		if (m) {
 			let slug = m[1]
 			this.boardsDetail.clear()
-			await this.mainModel.loadBoardsDetail(slug)
+			await this.mainModel.loadBoardsDetail(slug, false)
 			this.showOnly('boardsDetail')
 			return
 		}

@@ -150,6 +150,7 @@ export class MainModel {
 	}
 
 	async loadBoardsData (cache=true) {
+		console.log('loadBoardsData', cache)
 		if (cache && this.cache.has('boardsData')) {
 			return this.cache.get('boardsData')
 		}

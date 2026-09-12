@@ -95,7 +95,12 @@ class SubjectsModel extends Model {
 
 		$loader = new Loader();
 
-		$table = $loader->load_subjects_dat_file($board_slug);
+		try {
+			$table = $loader->load_subjects_dat_file($board_slug);
+		} catch (FileDoesNotExistsError $e) {
+			throw $e;
+		}
+
 		$subjects = [];
 
 		foreach ($table as $row) {
@@ -139,8 +144,24 @@ class SubjectsModel extends Model {
 		}
 	}
 
-	function insert_at_first ($subject /* SubjectModel */) {
+	function insert_at_first (SubjectModel $subject) {
 		array_unshift($this->subjects, $subject);	
+	}
+
+	function find_by_thread_id ($thread_id) {
+		foreach ($this->subjects as $subject) {
+			if ($subject->thread_id == $thread_id) {
+				return $subject;
+			}
+		}
+		return null;
+	}
+
+	function remove (SubjectModel $subject) {
+		$this->subjects = array_filter($this->subjects, function ($s) use ($subject) {
+			return !($s->thread_id == $subject->thread_id &&
+				     $s->thread_name == $subject->thread_name);
+		});
 	}
 }
 
@@ -213,7 +234,7 @@ class ThreadModel extends Model {
 		$subject = new SubjectModel();
 		$subject->init($this->id, $thread_name);
 
-		$subjects->shrink_tail(5);
+		$subjects->shrink_tail(MAX_SUBJECTS_LEN);
 		$subjects->insert_at_first($subject);
 
 		try {

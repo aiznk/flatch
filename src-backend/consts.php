@@ -41,6 +41,9 @@ define('THREADS_DIR_NAME', 'threads');
 // 板の表示するスレッドの一覧
 define('SUBJECTS_FILE_NAME', 'subjects.dat');
 
+// subjects.datに保存するスレッド情報数
+define('MAX_SUBJECTS_LEN', 5);
+
 // datファイルの行の区切り文字
 define('DAT_LINE_SEP', '<>');
 
