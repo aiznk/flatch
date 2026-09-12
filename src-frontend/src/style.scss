@@ -3,6 +3,8 @@ $font-mono: "JetBrains Mono", "Cascadia Code", Consolas, monospace;
 $radius: 10px;
 $radius-sm: 6px;
 $transition: 160ms ease;
+$pad-y: 1rem;
+$pad-x: 1.414rem;
 
 :root {
 	color-scheme: light;
@@ -93,7 +95,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .link:focus-v
 .welcome-message { margin-bottom: 1.25rem; padding: 1rem 1.2rem; border: 1px solid var(--border); border-left: 4px solid var(--accent); border-radius: $radius-sm; background: var(--surface-alt); color: var(--text); font-size: 1.05rem; }
 .home-thread-item { margin-top: .85rem; padding: 1.25rem; border: 1px solid var(--border); border-radius: $radius; background: var(--surface); transition: border-color $transition, transform $transition, box-shadow $transition; }
 .home-thread-item:hover { border-color: var(--accent); box-shadow: 0 8px 22px rgba(41, 95, 170, .12); transform: translateY(-1px); }
-.home-thread-subject, .thread-title { margin-bottom: .8rem; color: var(--text); font: 700 1.05rem/1.45 $font-mono; }
+.home-thread-subject { margin-bottom: .8rem; color: var(--text); font: 700 1.05rem/1.45 $font-mono; }
 .home-thread-records { margin-bottom: 1rem; }
 
 button, .home-view-thread-button, .home-more-button { padding: .48rem .85rem; border: 1px solid var(--accent); border-radius: $radius-sm; background: var(--accent); color: #07111f; font-weight: 700; transition: background-color $transition, border-color $transition, transform $transition; }
@@ -108,7 +110,6 @@ button:active, .home-view-thread-button:active, .home-more-button:active { trans
 .threads-list-item:hover { background: var(--surface-hover); }
 
 .post-record-form, .post-thread-form { margin-top: 1.5rem; padding: 1.1rem; border: 1px solid var(--border); border-radius: $radius; background: var(--surface-alt); }
-.label-input { display: inline-flex; flex-direction: column; gap: .3rem; margin: 0 .7rem .7rem 0; vertical-align: top; }
 .label-input label { color: var(--text-muted); font-size: .78rem; font-weight: 700; }
 input, textarea { width: 100%; padding: .55rem .65rem; border: 1px solid var(--border); border-radius: $radius-sm; background: var(--surface); color: var(--text); transition: border-color $transition, box-shadow $transition; }
 input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); outline: none; }
@@ -122,12 +123,15 @@ input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px
 }
 .post-thread-form {
 	.form-title {
-		margin-bottom: 0.5rem;
+		// margin-bottom: 0.5rem;
 	}
 	.content { 
 		display: block; 
 		min-height: 130px; 
 		margin-bottom: .65rem; 
+	}
+	.label-input {
+		margin-bottom: 0.5rem;	
 	}
 }
 .threads-detail { overflow-wrap: anywhere; }
