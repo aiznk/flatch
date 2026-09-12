@@ -108,17 +108,18 @@ export class MainModel {
 			})
 		} catch (e) {
 			console.error(e)
-			return
+			return null
 		}
 
 		if (response.status !== 200) {
 			let json = await response.json()
 			console.error(json.message)
-			return
+			return null
 		}
 
 		let json = await response.json()
 		console.log(json)
+		return json
 	}
 
 	async postRecord (boardSlug, threadId, name, email, content) {

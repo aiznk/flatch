@@ -56,13 +56,16 @@ export default class Root extends nue.Root {
 	}
 
 	async postThread (ev) {
-		await this.mainModel.postThread(
+		let thread = await this.mainModel.postThread(
 			ev.boardSlug,
 			ev.threadName,
 			ev.name,
 			ev.email,
 			ev.content,
 		)
+		if (thread) {
+			await this.mainModel.loadBoardsDetail(ev.boardSlug, false)
+		}
 	}
 
 	async clickPostRecordBtn (ev) {
