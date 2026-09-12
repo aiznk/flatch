@@ -221,6 +221,7 @@ class Api {
 		}
 
 		$response['board_slug'] = $board->slug;
+		$response['board_name'] = $board->name;
 		$response['board_no_name'] = $board->no_name;
 		$response['thread_id'] = $thread_id;
 		$response['thread_records'] = $records;

@@ -17,6 +17,41 @@ class ThreadTitleWrapper extends nue.Div {
 	}
 }
 
+class Breadcrumbs extends nue.Div {
+	constructor () {
+		super({ class: 'breadcrumbs' })
+	}
+
+	addSeparator () {
+		let separator = new nue.Span({ class: 'breadcrumbs-separator' })
+		separator.setText('>')
+		this.add(separator)
+	}
+
+	setItems (boardSlug, boardName, threadName) {
+		this.clear()
+
+		this.add(new nue.Link(
+			i18n.home(),
+			{ path: '/home' },
+			'/?path=/home',
+			{ class: 'link breadcrumbs-link' },
+		))
+		this.addSeparator()
+		this.add(new nue.Link(
+			boardName,
+			{ path: `/${FLATCH.BOARDS_DIR_NAME}/${boardSlug}` },
+			`/?path=/${FLATCH.BOARDS_DIR_NAME}/${boardSlug}`,
+			{ class: 'link breadcrumbs-link' },
+		))
+		this.addSeparator()
+
+		let current = new nue.Span({ class: 'breadcrumbs-current' })
+		current.setText(threadName)
+		this.add(current)
+	}
+}
+
 class ReachedLimitItem extends nue.Div {
 	constructor () {
 		super({ class: 'reached-limit-item' })
@@ -29,9 +64,13 @@ export default class ThreadsDetail extends nue.Div {
 		super({ class: 'threads-detail' })
 		this.mainModel = mainModel
 		this.boardSlug = null
+		this.boardName = null
 		this.threadId = null
 		this.refThreadName = nue.ref(null)
 		this.refBoardNoName = nue.ref(null)
+
+		this.breadcrumbs = new Breadcrumbs()
+		this.add(this.breadcrumbs)
 
 		this.title = new ThreadTitleWrapper()
 		this.add(this.title)
@@ -44,9 +83,11 @@ export default class ThreadsDetail extends nue.Div {
 
 		this.refThreadName.onSet((_, title) => {
 			this.title.setText(title)
+			this.breadcrumbs.setItems(this.boardSlug, this.boardName, title)
 		})
 		this.mainModel.refThreadsDetailData.onSet((_, data) => {
 			this.boardSlug = data.board_slug
+			this.boardName = data.board_name
 			this.threadId = parseInt(data.thread_id)
 			this.refBoardNoName.value = data.board_no_name
 			if (isNaN(this.threadId) || this.threadId <= 0) {
