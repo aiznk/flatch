@@ -59,3 +59,15 @@ export function viewThread () {
 export function more () {
 	return get('もっと見る', 'Show more')
 }
+
+export function threadDisplay () {
+	return get('表示形式', 'Display')
+}
+
+export function threadDisplayList () {
+	return get('リスト', 'List')
+}
+
+export function threadDisplayTable () {
+	return get('テーブル', 'Table')
+}

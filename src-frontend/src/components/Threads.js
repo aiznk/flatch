@@ -18,18 +18,33 @@ class ThreadsListItem extends nue.Li {
 }
 
 class ThreadsList extends nue.Ul {
-	constructor () {
-		super({ class: 'threads-list' })
+	constructor (display) {
+		super({ class: `threads-list ${display}` })
+	}
+
+	setDisplay (display) {
+		this.setClass(`threads-list ${display}`)
 	}
 }
 
 export default class Threads extends nue.Div {
-	constructor (mainModel) {
+	constructor (mainModel, {
+		display='list',
+	}={}) {
 		super({ class: 'threads' })
 		this.mainModel = mainModel
+		this.display = display
 
-		this.list = new ThreadsList()
+		this.list = new ThreadsList(this.display)
 		this.add(this.list)
+	}
+
+	setDisplay (display) {
+		if (!['list', 'table'].includes(display)) {
+			return
+		}
+		this.display = display
+		this.list.setDisplay(display)
 	}
 
 	clear () {

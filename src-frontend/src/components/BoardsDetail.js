@@ -11,6 +11,19 @@ class Desc extends nue.P {
 	}
 }
 
+class ThreadsDisplaySelect extends nue.Select {
+	constructor () {
+		super({ class: 'threads-display-select' })
+		this.add(new nue.Option('list', i18n.threadDisplayList()))
+		this.add(new nue.Option('table', i18n.threadDisplayTable()))
+		this.setValue('list')
+	}
+
+	onChange () {
+		this.emit('changeThreadsDisplay', this.getValue())
+	}
+}
+
 export default class BoardsDetail extends nue.Div {
 	constructor (mainModel) {
 		super({ class: 'boards-detail' })
@@ -19,6 +32,13 @@ export default class BoardsDetail extends nue.Div {
 
 		this.desc = new Desc()
 		this.add(this.desc)
+
+		this.threadsDisplay = new nue.Div({ class: 'threads-display' })
+		this.threadsDisplayLabel = new nue.Label(i18n.threadDisplay())
+		this.threadsDisplay.add(this.threadsDisplayLabel)
+		this.threadsDisplaySelect = new ThreadsDisplaySelect()
+		this.threadsDisplay.add(this.threadsDisplaySelect)
+		this.add(this.threadsDisplay)
 
 		this.threads = new Threads(this.mainModel)
 		this.add(this.threads)
@@ -42,6 +62,9 @@ export default class BoardsDetail extends nue.Div {
 		case 'postThread':
 			val.boardSlug = this.board.slug
 			this.emit(key, val)
+			break
+		case 'changeThreadsDisplay':
+			this.threads.setDisplay(val)
 			break
 		}
 	}

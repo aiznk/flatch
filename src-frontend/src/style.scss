@@ -107,10 +107,18 @@ button:active, .home-view-thread-button:active, .home-more-button:active { trans
 .home-more-button { display: block; width: min(100%, calc($pad-x * 17)); margin: calc($pad-y * 1.25) auto 0; }
 
 .desc { margin-bottom: calc($pad-y * 1.25); padding-bottom: calc($pad-y * 0.75); border-bottom: 1px solid var(--border); color: var(--text-muted); }
-.threads-list { list-style: none; overflow: hidden; border: 1px solid var(--border); border-radius: $radius; }
-.threads-list-item { padding: calc($pad-y * 0.65) calc($pad-x * 0.64); background: var(--surface); border-bottom: 1px solid var(--border); }
-.threads-list-item:last-child { border-bottom: 0; }
-.threads-list-item:hover { background: var(--surface-hover); }
+.threads-display { display: flex; align-items: center; justify-content: flex-end; gap: calc($pad-x * 0.35); margin-bottom: calc($pad-y * 0.5); color: var(--text-muted); font-size: calc($pad-y * 0.8); }
+.threads-display-select { width: auto; min-width: calc($pad-x * 7); padding: calc($pad-y * 0.25) calc($pad-x * 0.35); }
+.threads-list { list-style: none; }
+.threads-list.list { overflow: hidden; border: 1px solid var(--border); border-radius: $radius; }
+.threads-list.list .threads-list-item { padding: calc($pad-y * 0.65) calc($pad-x * 0.64); background: var(--surface); border-bottom: 1px solid var(--border); }
+.threads-list.list .threads-list-item:last-child { border-bottom: 0; }
+.threads-list.list .threads-list-item:hover { background: var(--surface-hover); }
+.threads-list.table { display: grid; grid-template-columns: repeat(auto-fill, minmax(calc($pad-x * 10), 1fr)); gap: calc($pad-y * 0.5) calc($pad-x * 0.5); }
+.threads-list.table .threads-list-item { min-width: 0; border: 1px solid var(--border); border-radius: $radius-sm; background: var(--surface); }
+.threads-list.table .link { display: block; overflow: hidden; padding: calc($pad-y * 0.55) calc($pad-x * 0.5); color: var(--text); text-overflow: ellipsis; white-space: nowrap; }
+.threads-list.table .threads-list-item:hover { border-color: var(--accent); background: var(--surface-hover); }
+.threads-list.table .link:hover { color: var(--accent); text-decoration: none; }
 
 .post-record-form, .post-thread-form { margin-top: calc($pad-y * 1.5); padding: calc($pad-y * 1.1) calc($pad-x * 0.78); border: 1px solid var(--border); border-radius: $radius; background: var(--surface-alt); }
 .label-input label { color: var(--text-muted); font-size: calc($pad-y * 0.78); font-weight: 700; }
