@@ -47,4 +47,11 @@ export default class PostThreadForm extends nue.Div {
 		})
 		this.add(this.postBtn)
 	}
+
+	reset () {
+		this.threadName.setValue('')
+		this.name.setValue('')
+		this.email.setValue('')
+		this.content.setValue('')
+	}
 }

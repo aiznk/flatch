@@ -61,6 +61,7 @@ export default class BoardsDetail extends nue.Div {
 		default: this.emit(key, val); break
 		case 'postThread':
 			val.boardSlug = this.board.slug
+			val.resetForm = () => this.postThreadForm.reset()
 			this.emit(key, val)
 			break
 		case 'changeThreadsDisplay':

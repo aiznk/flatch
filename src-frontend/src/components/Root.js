@@ -64,6 +64,7 @@ export default class Root extends nue.Root {
 			ev.content,
 		)
 		if (thread) {
+			ev.resetForm()
 			await this.mainModel.loadBoardsDetail(ev.boardSlug, false)
 			let path = `/${FLATCH.BOARDS_DIR_NAME}/${ev.boardSlug}/${FLATCH.THREADS_DIR_NAME}/${thread.thread_id}`
 			history.pushState({ path }, '', `/?path=${path}`)
