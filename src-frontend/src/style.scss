@@ -21,6 +21,8 @@ $transition: 160ms ease;
 	--violet: #7c3aed;
 	--success: #047857;
 	--danger: #dc2626;
+	--warning: #a16207;
+	--warning-soft: #fef3c7;
 	--shadow: 0 calc($pad-y * 0.75) calc($pad-x * 1.5) rgba(35, 51, 83, .09);
 }
 
@@ -39,6 +41,8 @@ $transition: 160ms ease;
 	--violet: #b49aff;
 	--success: #5ee6b4;
 	--danger: #ff8799;
+	--warning: #fcd34d;
+	--warning-soft: #3a2c10;
 	--shadow: 0 $pad-y calc($pad-x * 1.8) rgba(0, 0, 0, .28);
 }
 
@@ -100,6 +104,7 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .link:focus-v
 .breadcrumbs { display: flex; flex-wrap: wrap; align-items: center; gap: calc($pad-x * 0.28); margin-bottom: calc($pad-y * 0.45); color: var(--text-muted); font: calc($pad-y * 0.78)/1.5 $font-mono; }
 .breadcrumbs-separator { color: var(--border); }
 .breadcrumbs-current { max-width: min(100%, calc($pad-x * 35)); overflow: hidden; color: var(--text-muted); text-overflow: ellipsis; white-space: nowrap; }
+.dat-dropped-warning { margin-bottom: calc($pad-y * 0.7); padding: calc($pad-y * 0.45) calc($pad-x * 0.5); border: 1px solid var(--warning); border-radius: $radius-sm; background: var(--warning-soft); color: var(--warning); font-size: calc($pad-y * 0.85); }
 
 button, .home-view-thread-button, .home-more-button { padding: calc($pad-y * 0.48) calc($pad-x * 0.6); border: 1px solid var(--accent); border-radius: $radius-sm; background: var(--accent); color: #07111f; font-weight: 700; transition: background-color $transition, border-color $transition, transform $transition; }
 button:hover, .home-view-thread-button:hover, .home-more-button:hover { border-color: var(--accent-strong); background: var(--accent-strong); transform: translateY(calc($pad-y * -0.0625)); }

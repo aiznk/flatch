@@ -220,11 +220,17 @@ class Api {
 			return $this->echo_exception($e);
 		}
 
+		$thread_subjects = $board->collect_thread_subjects();
+		$active_subjects = array_filter($thread_subjects, function ($subject) use ($thread_id) {
+			return strval($subject[0]) === strval($thread_id);
+		});
+
 		$response['board_slug'] = $board->slug;
 		$response['board_name'] = $board->name;
 		$response['board_no_name'] = $board->no_name;
 		$response['thread_id'] = $thread_id;
 		$response['thread_records'] = $records;
+		$response['thread_is_dat_dropped'] = count($active_subjects) === 0;
 
 		$this->echo_json($response);
 	}

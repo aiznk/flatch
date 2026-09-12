@@ -52,6 +52,13 @@ class Breadcrumbs extends nue.Div {
 	}
 }
 
+class DatDroppedWarning extends nue.Div {
+	constructor () {
+		super({ class: 'dat-dropped-warning' })
+		this.setText(i18n.datDroppedWarning())
+	}
+}
+
 class ReachedLimitItem extends nue.Div {
 	constructor () {
 		super({ class: 'reached-limit-item' })
@@ -72,6 +79,10 @@ export default class ThreadsDetail extends nue.Div {
 		this.breadcrumbs = new Breadcrumbs()
 		this.add(this.breadcrumbs)
 
+		this.datDroppedWarning = new DatDroppedWarning()
+		this.datDroppedWarning.hide()
+		this.add(this.datDroppedWarning)
+
 		this.title = new ThreadTitleWrapper()
 		this.add(this.title)
 
@@ -90,6 +101,11 @@ export default class ThreadsDetail extends nue.Div {
 			this.boardName = data.board_name
 			this.threadId = parseInt(data.thread_id)
 			this.refBoardNoName.value = data.board_no_name
+			if (data.thread_is_dat_dropped) {
+				this.datDroppedWarning.show()
+			} else {
+				this.datDroppedWarning.hide()
+			}
 			if (isNaN(this.threadId) || this.threadId <= 0) {
 				console.error('invalid thread id')
 			}
