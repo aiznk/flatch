@@ -60,7 +60,7 @@ export default class PopupComponents extends nue.Div {
 					data.board_slug,
 					data.thread_id,
 					record, {
-						noName: data.no_name,
+						noName: data.board_no_name,
 					}
 				)
 				anchorRecords.add(item)

@@ -6,9 +6,11 @@ export default class RecordsItem extends nue.Li {
 		mainModel,
 		boardSlug /* String */,
 		threadId /* Number */,
-		record /* RecordModel */, {
-		noName=null, /* String */
-	}={}) {
+		record /* RecordModel */,
+		{
+			noName=null, /* String */
+		}={},
+	) {
 		super({ class: 'records-item' })
 		this.mainModel = mainModel
 		this.record = record
