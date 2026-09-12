@@ -3,40 +3,7 @@ import * as i18n from '../i18n.js'
 import { ThreadModel, RecordModel } from '../models.js'
 import RecordsItem from './RecordsItem.js'
 import Records from './Records.js'
-
-class PostRecordForm extends nue.Div {
-	constructor () {
-		super({ class: 'post-record-form' })
-
-		this.name = new nue.Input({
-			class: 'name',
-			placeholder: i18n.name(),
-		})
-		this.add(this.name)
-
-		this.email = new nue.Input({
-			class: 'name',
-			placeholder: i18n.email(),
-		})
-		this.add(this.email)
-
-		this.content = new nue.Textarea({
-			class: 'content',
-			placeholder: i18n.content(),
-		})
-		this.add(this.content)
-
-		this.postBtn = new nue.Button(i18n.write(), async ev => {
-			ev.name = this.name.getValue()
-			ev.email = this.email.getValue()
-			ev.content = this.content.getValue()
-			await this.emit('clickPostRecordBtn', ev)
-		}, {
-			class: 'post-btn',
-		})
-		this.add(this.postBtn)
-	}
-}
+import PostRecordForm from './PostRecordForm.js'
 
 class ThreadTitleWrapper extends nue.Div {
 	constructor () {
