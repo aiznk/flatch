@@ -108,13 +108,15 @@ button:active, .home-view-thread-button:active, .home-more-button:active { trans
 .threads-list-item:last-child { border-bottom: 0; }
 .threads-list-item:hover { background: var(--surface-hover); }
 
-.post-form, .post-thread-form { margin-top: 1.5rem; padding: 1.1rem; border: 1px solid var(--border); border-radius: $radius; background: var(--surface-alt); }
+.post-record-form, .post-thread-form { margin-top: 1.5rem; padding: 1.1rem; border: 1px solid var(--border); border-radius: $radius; background: var(--surface-alt); }
 .label-input { display: inline-flex; flex-direction: column; gap: .3rem; margin: 0 .7rem .7rem 0; vertical-align: top; }
 .label-input label { color: var(--text-muted); font-size: .78rem; font-weight: 700; }
 input, textarea { width: 100%; padding: .55rem .65rem; border: 1px solid var(--border); border-radius: $radius-sm; background: var(--surface); color: var(--text); transition: border-color $transition, box-shadow $transition; }
 input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); outline: none; }
-.post-form {
+.post-record-form {
 	display: inline-block;
+	max-width: 800px;
+	width: 100%;
 	.name, .email { display: block; min-width: min(100%, 360px); margin-bottom: .65rem; }
 	.content { display: block; min-width: min(100%, 520px); min-height: 130px; margin-bottom: .65rem; }
 }
@@ -155,7 +157,7 @@ input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px
 		.nue_paned-frame__divid { display: none; }
 	}
 	.home-thread-item { padding: 1rem; }
-	.post-form, .post-thread-form { padding: .85rem; }
-	.post-form .content { min-width: 100%; }
+	.post-record-form, .post-thread-form { padding: .85rem; }
+	.post-record-form .content { min-width: 100%; }
 	.records-item .bottom { padding-left: 0; }
 }

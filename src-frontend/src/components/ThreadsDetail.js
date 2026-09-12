@@ -6,7 +6,7 @@ import Records from './Records.js'
 
 class PostRecordForm extends nue.Div {
 	constructor () {
-		super({ class: 'post-form' })
+		super({ class: 'post-record-form' })
 
 		this.name = new nue.Input({
 			class: 'name',
