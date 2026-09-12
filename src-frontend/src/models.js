@@ -29,7 +29,7 @@ export class MainModel {
 			data = this.cache.get(ckey)
 		} else {
 			let response
-			const url = `/?m=api_load_threads_detail&board_slug=${boardSlug}&thread_id=${threadId}`
+			const url = `/?m=api_load_threads_detail&board_slug=${encodeURIComponent(boardSlug)}&thread_id=${encodeURIComponent(threadId)}`
 
 			try {
 				response = await fetch(url)
@@ -181,7 +181,7 @@ export class MainModel {
 		} else {
 			let response
 			try {
-				response = await fetch(`/?m=api_load_boards_detail&board_slug=${boardSlug}`)
+				response = await fetch(`/?m=api_load_boards_detail&board_slug=${encodeURIComponent(boardSlug)}`)
 			} catch (e) {
 				console.error(e)
 				return
@@ -208,7 +208,7 @@ export class MainModel {
 		} else {
 			let response
 			try {
-				response = await fetch(`/?m=api_load_threads_detail&board_slug=${boardSlug}&thread_id=${threadId}`)
+				response = await fetch(`/?m=api_load_threads_detail&board_slug=${encodeURIComponent(boardSlug)}&thread_id=${encodeURIComponent(threadId)}`)
 			} catch (e) {
 				console.error(e)
 				return
