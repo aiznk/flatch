@@ -81,6 +81,25 @@ html, body, #app, .root {
 		margin-top: calc($pad-y*0.8);
 	}
 }
+.home {
+	.welcome-message {
+		margin-bottom: $pad-y;
+	}
+	.home-thread-item {
+		padding: $pad-y 0;
+		border-top: 1px solid #ccc;
+	}
+	.home-thread-subject {
+		font-size: 1.1rem;
+		margin-bottom: calc($pad-y*0.5);
+	}
+	.home-thread-records {
+		margin-bottom: calc($pad-y*0.5);
+	}
+	.home-more-button {
+		margin-top: $pad-y;
+	}
+}
 .post-form {
 	display: inline-block;
 	border: 1px solid gray;
@@ -157,4 +176,3 @@ html, body, #app, .root {
 .nue_paned-frame__divid--vertical {
 	height: 2px;
 }
-

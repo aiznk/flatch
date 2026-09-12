@@ -43,6 +43,7 @@ class BoardModel extends Model {
 			"slug" => $this->slug,
 			"category_slug" => $this->category_slug,
 			"desc" => $this->desc,
+			"no_name" => $this->no_name,
 		];
 	}
 

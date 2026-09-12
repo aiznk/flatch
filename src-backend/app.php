@@ -21,6 +21,7 @@ class App {
 			var FLATCH = {
 				APP_TITLE: "<?= safe($app_name) ?>",
 				WELCOME_MESSAGE: "<?= safe($welcome_message) ?>",
+				HOME_DISPLAY_BOARD: "<?= safe($this->config['home_display_board'] ?? '') ?>",
 				PUBLISHED_DATE: "<?= safe($this->config['published_date']) ?>",
 				BOARDS_DIR_NAME: "<?= BOARDS_DIR_NAME ?>",
 				THREADS_DIR_NAME: "<?= THREADS_DIR_NAME ?>",

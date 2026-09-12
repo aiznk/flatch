@@ -47,3 +47,11 @@ export function content () {
 export function invalidPostData () {
 	return get('投稿データが不正です。', 'Invalid post data.')
 }
+
+export function viewThread () {
+	return get('スレッドを見る', 'View thread')
+}
+
+export function more () {
+	return get('もっと見る', 'Show more')
+}
