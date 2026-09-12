@@ -22,6 +22,7 @@ class App {
 				APP_TITLE: "<?= safe($app_name) ?>",
 				WELCOME_MESSAGE: "<?= safe($welcome_message) ?>",
 				HOME_DISPLAY_BOARD: "<?= safe($this->config['home_display_board'] ?? '') ?>",
+				HOME_THREADS_PER_PAGE: <?= HOME_THREADS_PER_PAGE ?>,
 				PUBLISHED_DATE: "<?= safe($this->config['published_date']) ?>",
 				BOARDS_DIR_NAME: "<?= BOARDS_DIR_NAME ?>",
 				THREADS_DIR_NAME: "<?= THREADS_DIR_NAME ?>",

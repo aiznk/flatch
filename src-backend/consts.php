@@ -1,4 +1,5 @@
 <?php
+define('DEF_APP_TITLE', 'Flatch');
 define('DATA_DIR', './data');
 define('MAX_LAST_POST_DIF', 3); // x seconds
 define('CONFIG_PATH', DATA_DIR .'/config.json');
@@ -8,7 +9,6 @@ define('THREAD_ID_PATH', DATA_DIR .'/thread_id.dat');
 define('STATIC_DIR', './static');
 define('INDEX_JS_PATH', STATIC_DIR .'/index.js');
 define('STYLE_CSS_PATH', STATIC_DIR .'/style.css');
-define('DEF_APP_TITLE', 'Flatch');
 define('BOARDS_DIR_NAME', 'boards');
 define('BOARDS_DIR', DATA_DIR . '/'. BOARDS_DIR_NAME);
 define('THREADS_DIR_NAME', 'threads');
@@ -16,7 +16,13 @@ define('SUBJECTS_FILE_NAME', 'subjects.dat');
 define('BOARD_SETTING_FILE_NAME', 'setting.json');
 define('DAT_LINE_SEP', '<>');
 define('DAT_FILE_EXT', '.dat');
+
+// スレッドに投稿できるレコードの上限数
 define('LIMIT_DAT_FILE_LINES', 1000);
+
+// ホームページに表示するスレッドリストの数
+define('HOME_THREADS_PER_PAGE', 10);
+
 define('RES_NAME_MIN_LEN', 0);
 define('RES_NAME_MAX_LEN', 64);
 define('RES_EMAIL_MIN_LEN', 0);

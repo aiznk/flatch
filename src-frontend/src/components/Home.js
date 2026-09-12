@@ -3,8 +3,6 @@ import * as i18n from '../i18n.js'
 import { ThreadModel, RecordModel } from '../models.js'
 import RecordsItem from './RecordsItem.js'
 
-const THREADS_PER_PAGE = 10
-
 class HomeThreadItem extends nue.Section {
 	constructor (mainModel, thread, record, noName) {
 		super({ class: 'home-thread-item' })
@@ -119,7 +117,7 @@ export default class Home extends nue.Div {
 
 		this.loading = true
 		this.moreButton.hide()
-		let nextThreads = this.threads.slice(this.offset, this.offset + THREADS_PER_PAGE)
+		let nextThreads = this.threads.slice(this.offset, this.offset + FLATCH.HOME_THREADS_PER_PAGE)
 		let records = await Promise.all(nextThreads.map(thread => this.loadFirstRecord(thread)))
 
 		for (let i = 0; i < nextThreads.length; i++) {
