@@ -12,16 +12,21 @@ class Api {
 		$this->loader = new Loader();
 	}
 
+	function echo_json ($data) {
+		header_app_json_utf8();
+		echo json_encode($data);
+	}
+
 	function echo_exception ($e) {
 		http_response_code(500);
-		echo json_encode([
+		$this->echo_json([
 			'message' => $e->getMessage(),
 		]);
 	}
 
 	function echo_error ($msg) {
 		http_response_code(500);
-		echo json_encode([
+		$this->echo_json([
 			'message' => $msg,
 		]);		
 	}
@@ -56,7 +61,7 @@ class Api {
 			"categories" => $categories,
 		];
 
-		echo json_encode($response);
+		$this->echo_json($response);
 	}
 
 	function post_thread () {
@@ -88,7 +93,7 @@ class Api {
 
 		$this->set_last_post_time();
 
-		echo json_encode([
+		$this->echo_json([
 			'thread_id' => $thread_id,
 			'board_slug' => $board_slug,
 		]);
@@ -153,7 +158,7 @@ class Api {
 
 		$this->set_last_post_time();
 
-		echo json_encode([]);
+		$this->echo_json([]);
 	}
 
 	function load_boards_detail () {
@@ -177,7 +182,7 @@ class Api {
 		$response['board'] = $board->to_array();
 		$response['thread_subjects'] = $thread_subjects;
 
-		echo json_encode($response);
+		$this->echo_json($response);
 	}
 
 	function load_threads_detail () {
@@ -220,6 +225,6 @@ class Api {
 		$response['thread_id'] = $thread_id;
 		$response['thread_records'] = $records;
 
-		echo json_encode($response);
+		$this->echo_json($response);
 	}
 }
