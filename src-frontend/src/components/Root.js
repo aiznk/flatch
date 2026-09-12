@@ -79,6 +79,7 @@ export default class Root extends nue.Root {
 			ev.name, 
 			ev.email, 
 			ev.content,
+			ev.resetForm,
 		)
 	}
 

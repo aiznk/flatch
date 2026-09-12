@@ -33,4 +33,10 @@ export default class PostRecordForm extends nue.Div {
 		})
 		this.add(this.postBtn)
 	}
+
+	reset () {
+		this.name.setValue('')
+		this.email.setValue('')
+		this.content.setValue('')
+	}
 }

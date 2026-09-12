@@ -119,6 +119,7 @@ export default class ThreadsDetail extends nue.Div {
 		case 'clickPostRecordBtn':
 			val.boardSlug = this.boardSlug
 			val.threadId = this.threadId
+			val.resetForm = () => this.postRecordForm.reset()
 			this.emit(key, val)
 			break
 		}
