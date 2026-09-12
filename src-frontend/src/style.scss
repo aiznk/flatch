@@ -109,15 +109,17 @@ html, body, #app, .root {
 				margin-left: calc($pad-x*0.2);
 			}	
 		}
+		.anchor {
+			.elem {
+				cursor: pointer;
+			}
+			.elem:not(:last-child):after {
+				content: ","
+			}
+		}
 	}
 	.records-item:not(:last-child) {
 		margin-bottom: calc($pad-y);
-	}
-}
-
-.anchor {
-	.elem:not(:last-child):after {
-		content: ","
 	}
 }
 
@@ -127,6 +129,9 @@ html, body, #app, .root {
 	border: 1px solid $color-black;
 	border-radius: $border-radius;
 	padding: calc($pad-y) calc($pad-x);
+	max-height: 200px;
+	max-width: 400px;
+	overflow-y: scroll;
 }
 
 /* nue */

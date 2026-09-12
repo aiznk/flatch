@@ -36,8 +36,8 @@ export default class Root extends nue.Root {
 
 	async receive (key, val) {
 		switch (key) {
-		case 'mouseEnterAnchorTagElem': await this.hoverRecordByAnchor(val); break
-		case 'mouseLeaveAnchorTagElem': this.hideHoverRecord(val); break
+		case 'mouseEnterAnchorTagElem': await this.mouseEnterAnchorTagElem(val); break
+		case 'mouseLeavePopupAnchorThreads': this.mouseLeavePopupAnchorThreads(val); break
 		case 'postThread': await this.postThread(val); break
 		case 'linkClick': this.linkClick(val); break
 		case 'clickBoardItem': this.clickBoardItem(val); break
@@ -45,12 +45,14 @@ export default class Root extends nue.Root {
 		}
 	}
 
-	hideHoverRecord (ev) {
+	mouseLeavePopupAnchorThreads (ev) {
 		this.mainModel.refAnchorRecordsData.value = null
 	}
 
-	async hoverRecordByAnchor (ev) {
-		await this.mainModel.loadRecordsByAnchorNums(ev.boardSlug, ev.threadId, ev.anchorNums, ev.clientX, ev.clientY)
+	async mouseEnterAnchorTagElem (ev) {
+		let x = ev.clientX - 8
+		let y = ev.clientY - 8
+		await this.mainModel.loadRecordsByAnchorNums(ev.boardSlug, ev.threadId, ev.anchorNums, x, y)
 	}
 
 	async postThread (ev) {
