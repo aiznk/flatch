@@ -1,7 +1,7 @@
 {
 	"app_name": "ふらっとちゃんねる",
-	"welcome_message": "My Appにようこそ！",
-	"home_display_board": "prog",
 	"theme": "dark",
+	"welcome_message": "ふらっとちゃんねるにようこそ！",
+	"home_display_board": "prog",
 	"published_date": "2026-09-08"
 }
