@@ -5,6 +5,7 @@ import Boards from './Boards.js'
 import BoardsListPanel from './BoardsListPanel.js'
 import BoardsDetail from './BoardsDetail.js'
 import ThreadsDetail from './ThreadsDetail.js'
+import NavigationPanel from './NavigationPanel.js'
 
 export default class AppContent extends nue.Div {
 	constructor (mainModel) {
@@ -17,8 +18,11 @@ export default class AppContent extends nue.Div {
 		this.paned.add(this.left)
 		this.right = new nue.Div({ class: 'right' })
 		this.paned.add(this.right)
+		this.navigationPanel = new NavigationPanel(this.mainModel)
+		this.paned.add(this.navigationPanel)
 		this.paned.setWidth(0, '10%')
-		this.paned.setWidth(1, '90%')
+		this.paned.setWidth(1, '75%')
+		this.paned.setWidth(2, '15%')
 		
 		this.boardsListPanel = new BoardsListPanel(this.mainModel)
 		this.left.add(this.boardsListPanel)
