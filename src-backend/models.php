@@ -7,9 +7,13 @@ require_once __dir__ .'/validators.php';
 require_once __dir__ .'/loader.php';
 
 function gen_datetime () {
-	$weekdays = ['日', '月', '火', '水', '木', '金', '土'];
-	$datetime = date('Y/m/d') . '(' . $weekdays[date('w')] . ') ' . date('H:i:s.v');
-	return $datetime;
+    $weekdays = ['日', '月', '火', '水', '木', '金', '土'];
+
+    $now = new DateTime();
+
+    return $now->format('Y/m/d')
+        . '(' . $weekdays[$now->format('w')] . ') '
+        . $now->format('H:i:s.v');
 }
 
 class Model {
@@ -86,26 +90,16 @@ class SubjectsModel extends Model {
 	public $board_slug; /* String */
 	public $subjects; /* Array<SubjectModel> */
 
-	function init ($board_slug) {
+	function open_stream ($board_slug) {
 		if (!$this->is_valid_board_slug($board_slug)) {
 			throw new ValidationError("invalid board slug: $board_slug");
 		}
 
 		$this->board_slug = $board_slug;
-		$this->subjects = [];
-	}
+		$this->subjects = $subjects;
 
-	function lock_stream ($fp) {
-		return flock($fp, LOCK_EX);
-	}
-
-	function unlock_stream ($fp) {
-		return flock($fp, LOCK_UN);
-	}
-
-	function open_stream () {
 		try {
-			$subjects_path = gen_board_subjects_path($this->board_slug);
+			$subjects_path = gen_board_subjects_path($board_slug);
 		} catch (ValidationError $e) {
 			throw $e;
 		}
@@ -119,7 +113,7 @@ class SubjectsModel extends Model {
 	}
 
 	function close_stream ($fp) {
-		fclose($fp);
+		return fclose($fp);
 	}
 
 	function load ($fp) {
@@ -168,6 +162,14 @@ class SubjectsModel extends Model {
 		} else {
 			throw new FileIOError("failed to lock subjects file: $subjects_path");
 		}
+	}
+
+	function lock_stream ($fp) {
+		return flock($fp, LOCK_EX);
+	}
+
+	function unlock_stream ($fp) {
+		return flock($fp, LOCK_UN);
 	}
 
 	function shrink_tail ($limit) {
@@ -256,13 +258,7 @@ class ThreadModel extends Model {
 		$subjects = new SubjectsModel();
 
 		try {
-			$subjects->init($this->board_slug);
-		} catch (ValidationError $e) {
-			throw $e;
-		}
-
-		try {
-			$fp = $subjects->open_stream();
+			$fp = $subjects->open_stream($this->board_slug);
 		} catch (ValidationError $e) {
 			throw $e;
 		} catch (FileIOError $e) {
@@ -300,14 +296,14 @@ class ThreadModel extends Model {
 		return $this->id;
 	}
 
-	function parse_records () {
+	function parse_records () : array {
 		$loader = new Loader();
 		$records = $loader->load_thread_dat_file($this->board_slug, $this->id);
 
 		return $records;
 	}
 
-	function add_record ($name, $email, $content) {
+	function add_record (string $name, string $email, string $content) {
 		$record = new RecordModel();
 
 		try {

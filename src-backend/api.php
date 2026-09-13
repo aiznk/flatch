@@ -162,13 +162,7 @@ class Api {
 			$subjects = new SubjectsModel();
 
 			try {
-				$subjects->init($board_slug);
-			} catch (ValidationError $e) {
-				return $this->echo_exception($e);
-			}
-
-			try {
-				$fp = $subjects->open_stream();
+				$fp = $subjects->open_stream($board_slug);
 			} catch (ValidationError $e) {
 				return $this->echo_exception($e);
 			} catch (FileIOError $e) {
