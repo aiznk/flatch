@@ -33,23 +33,26 @@ function count_file_lines(string $filename): int {
     return $count;
 }
 
-function gen_boards_dir ($board_slug) {
-	return check_path(BOARDS_DIR .'/'. $board_slug);
+function gen_boards_dir (string $board_slug) : string {
+	$path = check_path(BOARDS_DIR .'/'. $board_slug);
+	if (!is_dir($path)) {
+		throw new ValidationError("invalid board slug $board_slug");
+	}
+	return $path;
 }
 
-function gen_board_subjects_path ($board_slug) {
+function gen_board_subjects_path (string $board_slug) : string {
 	$board_dir = gen_boards_dir($board_slug);
 	return check_path($board_dir .'/'. SUBJECTS_FILE_NAME);
 }
 
-function gen_threads_dir ($board_slug) {
+function gen_threads_dir (string $board_slug) : string {
 	$board_dir = gen_boards_dir($board_slug);
 	return check_path($board_dir .'/'. THREADS_DIR_NAME);		
 }
 
-function gen_dat_path ($board_slug, $thread_id) {
+function gen_dat_path (string $board_slug, int $thread_id) : string {
 	$threads_dir = gen_threads_dir($board_slug);
-	touch_dirs($threads_dir);
 	$dat_path = check_path($threads_dir .'/'. $thread_id . DAT_FILE_EXT);
 	return $dat_path;
 }
