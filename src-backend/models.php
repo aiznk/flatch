@@ -9,7 +9,7 @@ require_once __dir__ .'/loader.php';
 function gen_datetime () {
     $weekdays = ['日', '月', '火', '水', '木', '金', '土'];
 
-    $now = new DateTime();
+    $now = new \DateTime();
 
     return $now->format('Y/m/d')
         . '(' . $weekdays[$now->format('w')] . ') '
@@ -87,8 +87,8 @@ class BoardModel extends Model {
 }
 
 class SubjectsModel extends Model {
-	public $board_slug; /* String */
-	public $subjects; /* Array<SubjectModel> */
+	public string $board_slug;
+	public array $subjects; /* Array<SubjectModel> */
 
 	function open_stream ($board_slug) {
 		if (!$this->is_valid_board_slug($board_slug)) {
@@ -96,7 +96,7 @@ class SubjectsModel extends Model {
 		}
 
 		$this->board_slug = $board_slug;
-		$this->subjects = $subjects;
+		$this->subjects = [];
 
 		try {
 			$subjects_path = gen_board_subjects_path($board_slug);
@@ -172,7 +172,7 @@ class SubjectsModel extends Model {
 		return flock($fp, LOCK_UN);
 	}
 
-	function shrink_tail ($limit) {
+	function shrink_tail (int $limit) {
 		while (count($this->subjects) > $limit) {
 			array_pop($this->subjects);
 		}
@@ -182,7 +182,7 @@ class SubjectsModel extends Model {
 		array_unshift($this->subjects, $subject);	
 	}
 
-	function find_by_thread_id ($thread_id) {
+	function find_by_thread_id (int $thread_id) {
 		foreach ($this->subjects as $subject) {
 			if ($subject->thread_id == $thread_id) {
 				return $subject;
@@ -200,15 +200,15 @@ class SubjectsModel extends Model {
 }
 
 class SubjectModel extends Model {
-	public $thread_id;
-	public $thread_name;
+	public int $thread_id;
+	public string $thread_name;
 
-	function init ($thread_id, $thread_name) {
+	function init (int $thread_id, string $thread_name) {
 		$this->thread_id = $thread_id;
 		$this->thread_name = $thread_name;
 	}
 
-	function set_array ($row) {
+	function set_array (array $row) {
 		if (count($row) !== 2) {
 			throw new ValueError("invalid row length: ".count($row));
 		}
@@ -223,10 +223,10 @@ class SubjectModel extends Model {
 }
 
 class ThreadModel extends Model {
-	public $board_slug;
-	public $id;
+	public string $board_slug;
+	public int $id;
 
-	function init ($board_slug, $thread_id) {
+	function init (string $board_slug, int $thread_id) {
 		if (!$this->is_valid_board_slug($board_slug)) {
 			throw new ValidationError("invalid board slug $board_slug");
 		}
@@ -238,7 +238,7 @@ class ThreadModel extends Model {
 		$this->id = intval($thread_id);
 	}
 
-	function create ($board_slug, $thread_name, $name, $email, $content) {
+	function create (string $board_slug, string $thread_name, string $name, string $email, string $content) {
 		// thread
 		$this->board_slug = $board_slug;
 		$this->id = inc_id(THREAD_ID_PATH);	
@@ -330,13 +330,13 @@ class ThreadModel extends Model {
 }
 
 class RecordModel extends Model {
-	public $name;
-	public $email;
-	public $datetime;
-	public $content;
-	public $subject;
+	public string $name;
+	public string $email;
+	public string $datetime;
+	public string $content;
+	public string $subject;
 
-	function init ($name, $email, $datetime, $content, $subject) {
+	function init (string $name, string $email, string $datetime, string $content, string $subject) {
 		$this->name = $name;
 		$this->email = $email;
 		$this->datetime = $datetime;
@@ -354,7 +354,7 @@ class RecordModel extends Model {
 		}
 	}
 
-	function replace_chars ($s) {
+	function replace_chars (string $s) : string {
 		// dat file keywords
 		$s = str_replace("<>", "", $s);
 		$s = str_replace("\n", "[br/]", $s);
@@ -391,7 +391,7 @@ class RecordModel extends Model {
 		return implode(DAT_LINE_SEP, $record) ."\n";	
 	}
 
-	function validate ($subject_empty=false) {
+	function validate (bool $subject_empty=false) {
 		$v = new RecordValidator();
 		$v->subject_empty = $subject_empty;
 
