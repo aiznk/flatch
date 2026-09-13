@@ -22,6 +22,7 @@ export default class NavigationPanel extends nue.Div {
 			this.boardSlug = null
 			this.threadId = null
 			this.subjects = []
+			this.clear()
 			return
 		}
 
