@@ -24,6 +24,7 @@ class App {
 				WELCOME_MESSAGE: "<?= safe($welcome_message) ?>",
 				HOME_DISPLAY_BOARD: "<?= safe($this->config['home_display_board'] ?? '') ?>",
 				HOME_THREADS_PER_PAGE: <?= HOME_THREADS_PER_PAGE ?>,
+				CSRF_TOKEN: "<?= safe($_SESSION['csrf_token']) ?>",
 				THEME: "<?= safe($theme) ?>",
 				PUBLISHED_DATE: "<?= safe($this->config['published_date']) ?>",
 				BOARDS_DIR_NAME: "<?= BOARDS_DIR_NAME ?>",
@@ -60,7 +61,20 @@ class App {
 	}
 
 	function setup () {
+		// 参考：https://www.php.net/manual/ja/function.session-set-cookie-params.php
+		session_set_cookie_params([
+			'lifetime' => 0,
+			'path' => '/',
+			'secure' => isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off',
+			'httponly' => true,
+			'samesite' => 'Lax',
+		]);
+
 		session_start();
+		
+		if (empty($_SESSION['csrf_token'])) {
+			$_SESSION['csrf_token'] = gen_csrf_token();
+		}
 	}
 
 	function cleanup () {

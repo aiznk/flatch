@@ -3,6 +3,10 @@ namespace fc;
 require_once __dir__ .'/consts.php';
 require_once __dir__ .'/excepts.php';
 
+function gen_csrf_token () {
+	return bin2hex(random_bytes(32));
+}
+
 function header_text_html_utf8 () {
 	header('Content-Type: text/html; charset=UTF-8');
 }

@@ -99,6 +99,7 @@ export class MainModel {
 		data.append('name', name)
 		data.append('email', email)
 		data.append('content', content)
+		data.append('csrf_token', FLATCH.CSRF_TOKEN)
 
 		let response
 		try {
@@ -130,6 +131,7 @@ export class MainModel {
 		data.append('name', name)
 		data.append('email', email)
 		data.append('content', content)
+		data.append('csrf_token', FLATCH.CSRF_TOKEN)
 
 		let response
 		try {

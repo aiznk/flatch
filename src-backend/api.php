@@ -31,6 +31,26 @@ class Api {
 		]);		
 	}
 
+	function require_csrf_token () {
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+			header('Allow: POST');
+			http_response_code(405);
+			$this->echo_json(['message' => 'method not allowed']);
+			return false;
+		}
+
+		$token = $_POST['csrf_token'] ?? null;
+		$session_token = $_SESSION['csrf_token'] ?? null;
+		if (!is_string($token) || !is_string($session_token) ||
+			!hash_equals($session_token, $token)) {
+			http_response_code(403);
+			$this->echo_json(['message' => 'invalid csrf token']);
+			return false;
+		}
+
+		return true;
+	}
+
 	function set_last_post_time () {
 		$_SESSION['last_post_time'] = time();
 	}
@@ -65,6 +85,9 @@ class Api {
 	}
 
 	function post_thread () {
+		if (!$this->require_csrf_token()) {
+			return;
+		}
 		if ($this->can_not_post()) {
 			return $this->echo_error("can't post");
 		}
@@ -100,6 +123,9 @@ class Api {
 	}
 
 	function post_record () {
+		if (!$this->require_csrf_token()) {
+			return;
+		}
 		if ($this->can_not_post()) {
 			return $this->echo_error("can't post");
 		}
