@@ -53,6 +53,9 @@ define('DAT_FILE_EXT', '.dat');
 // スレッドに投稿できるレコードの上限数
 define('LIMIT_DAT_FILE_LINES', 1000);
 
+// 読み込めるファイルサイズ
+define('LIMIT_READ_FILE_SIZE', 1024*1024*30); // 30MB
+
 // ホームページに表示するスレッドリストの数
 define('HOME_THREADS_PER_PAGE', 10);
 

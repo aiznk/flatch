@@ -3,6 +3,19 @@ namespace fc;
 require_once __dir__ .'/consts.php';
 require_once __dir__ .'/excepts.php';
 
+function read_stream_all ($fp) {
+	fseek($fp, 0, SEEK_END);
+	$size = ftell($fp);
+	fseek($fp, 0, SEEK_SET);
+
+	if ($size >= LIMIT_READ_FILE_SIZE) {
+		throw new FileIOError('reached limit read file size');
+	}
+
+	$content = fread($fp, $size);
+	return $content;
+}
+
 function gen_csrf_token () {
 	return bin2hex(random_bytes(32));
 }
@@ -39,6 +52,11 @@ function gen_boards_dir (string $board_slug) : string {
 		throw new ValidationError("invalid board slug $board_slug");
 	}
 	return $path;
+}
+
+function gen_board_setting_path (string $board_slug) : string {
+	$board_dir = gen_boards_dir($board_slug);
+	return check_path($board_dir .'/'. BOARD_SETTING_FILE_NAME);
 }
 
 function gen_board_subjects_path (string $board_slug) : string {
