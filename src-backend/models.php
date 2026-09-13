@@ -86,26 +86,63 @@ class SubjectsModel extends Model {
 	public $board_slug; /* String */
 	public $subjects; /* Array<SubjectModel> */
 
-	function load ($board_slug) {
+	function init ($board_slug) {
 		if (!$this->is_valid_board_slug($board_slug)) {
 			throw new ValidationError("invalid board slug: $board_slug");
 		}
 
 		$this->board_slug = $board_slug;
+		$this->subjects = [];
+	}
 
-		$loader = new Loader();
+	function lock_stream ($fp) {
+		return flock($fp, LOCK_EX);
+	}
 
+	function unlock_stream ($fp) {
+		return flock($fp, LOCK_UN);
+	}
+
+	function open_stream () {
 		try {
-			$table = $loader->load_subjects_dat_file($board_slug);
-		} catch (FileDoesNotExistsError $e) {
+			$subjects_path = gen_board_subjects_path($this->board_slug);
+		} catch (ValidationError $e) {
 			throw $e;
 		}
 
+		$fp = fopen($subjects_path, "r+");
+		if ($fp === false) {
+			throw new FileIOError("failed to open subjects file: $subjects_path");
+		}
+
+		return $fp;
+	}
+
+	function close_stream ($fp) {
+		fclose($fp);
+	}
+
+	function load ($fp) {
+		try {
+			$content = read_stream_all($fp);
+		} catch (FileIOError $e) {
+			throw $e;
+		}
+
+		$content = str_replace("\r\n", "\n", $content);
+		$lines = explode("\n", trim($content));
 		$subjects = [];
 
-		foreach ($table as $row) {
+		foreach ($lines as $line) {
+			$toks = explode(DAT_LINE_SEP, trim($line));
 			$subject = new SubjectModel();
-			$subject->set_array($row);
+
+			try {
+				$subject->set_array($toks);
+			} catch (ValueError $e) {
+				throw $e;
+			}
+
 			$subjects[] = $subject;
 		}
 
@@ -114,19 +151,16 @@ class SubjectsModel extends Model {
 		return $this->subjects;
 	}
 
-	function save () {
-		if (!$this->is_valid_board_slug($this->board_slug)) {
-			throw new ValidationError("invalid board slug: $board_slug");
-		}
-
-		$subjects_path = gen_board_subjects_path($this->board_slug);
-
-		$fp = fopen($subjects_path, "w");
-		if ($fp === false) {
-			throw new FileIOError("failed to open subjects file: $subjects_path");
+	function save ($fp) {
+		if (!rewind($fp)) {
+			throw new FileIOError("failed to rewind stream");
 		}
 
 		if (flock($fp, LOCK_EX)) {
+			if (!ftruncate($fp, 0)) {
+				throw new FileIOError("failed to truncate file");
+			}
+
 			foreach ($this->subjects as $subject) {
 				$line = $subject->to_record_line();
 				fputs($fp, $line);
@@ -134,8 +168,6 @@ class SubjectsModel extends Model {
 		} else {
 			throw new FileIOError("failed to lock subjects file: $subjects_path");
 		}
-
-		fclose($fp);
 	}
 
 	function shrink_tail ($limit) {
@@ -176,7 +208,7 @@ class SubjectModel extends Model {
 
 	function set_array ($row) {
 		if (count($row) !== 2) {
-			throw new ValueError('invalid row length');
+			throw new ValueError("invalid row length: ".count($row));
 		}
 
 		$this->thread_id = $row[0];
@@ -222,9 +254,29 @@ class ThreadModel extends Model {
 
 		// subject
 		$subjects = new SubjectsModel();
-		
+
 		try {
-			$subjects->load($this->board_slug);
+			$subjects->init($this->board_slug);
+		} catch (ValidationError $e) {
+			throw $e;
+		}
+
+		try {
+			$fp = $subjects->open_stream();
+		} catch (ValidationError $e) {
+			throw $e;
+		} catch (FileIOError $e) {
+			throw $e;
+		}
+
+		if (!$subjects->lock_stream($fp)) {
+			throw new FileIOError("failed to lock subjects file");
+		}
+
+		try {
+			$subjects->load($fp);
+		} catch (ValueError $e) {
+			throw $e;
 		} catch (FileDoesNotExistsError $e) {
 			throw $e;
 		} catch (FileIOError $e) {
@@ -238,10 +290,12 @@ class ThreadModel extends Model {
 		$subjects->insert_at_first($subject);
 
 		try {
-			$subjects->save();
+			$subjects->save($fp);
 		} catch (FileIOError $e) {
 			throw $e;
 		}
+
+		$subjects->close_stream($fp);
 
 		return $this->id;
 	}

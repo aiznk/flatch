@@ -56,7 +56,7 @@ class Api {
 	}
 
 	function can_not_post () {
-		$t1 = intval($_SESSION['last_post_time']);
+		$t1 = intval($_SESSION['last_post_time'] ?? 0);
 		$t2 = time();
 
 		if ($t2 - $t1 <= MAX_LAST_POST_DIF) {
@@ -108,6 +108,8 @@ class Api {
 				$email, 
 				$content,
 			);
+		} catch (ValueError $e) {
+			return $this->echo_exception($e);
 		} catch (ValidationError $e) {
 			return $this->echo_exception($e);
 		} catch (FileIOError $e) {
@@ -160,7 +162,27 @@ class Api {
 			$subjects = new SubjectsModel();
 
 			try {
-				$subjects->load($board_slug);	
+				$subjects->init($board_slug);
+			} catch (ValidationError $e) {
+				return $this->echo_exception($e);
+			}
+
+			try {
+				$fp = $subjects->open_stream();
+			} catch (ValidationError $e) {
+				return $this->echo_exception($e);
+			} catch (FileIOError $e) {
+				return $this->echo_exception($e);
+			}
+
+			if (!$subjects->lock_stream($fp)) {
+				return $this->echo_error("failed to lock subjects file");
+			}
+
+			try {
+				$subjects->load($fp);	
+			} catch (ValueError $e) {
+				return $this->echo_exception($e);
 			} catch (ValidationError $e) {
 				return $this->echo_exception($e);
 			} catch (FileIOError $e) {
@@ -173,13 +195,15 @@ class Api {
 				$subjects->insert_at_first($subject);
 				
 				try {
-					$subjects->save();
+					$subjects->save($fp);
 				} catch (ValidationError $e) {
 					return $this->echo_exception($e);
 				} catch (FileIOError $e) {
 					return $this->echo_exception($e);
 				}
 			}
+
+			$subjects->close_stream($fp);
 		}
 
 		$this->set_last_post_time();
