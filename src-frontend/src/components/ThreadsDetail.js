@@ -1,6 +1,7 @@
 import * as nue from '../nue/nue.js'
 import * as i18n from '../i18n.js'
 import { ThreadModel, RecordModel } from '../models.js'
+import { genThreadTitle } from '../utils.js'
 import RecordsItem from './RecordsItem.js'
 import Records from './Records.js'
 import PostRecordForm from './PostRecordForm.js'
@@ -73,6 +74,7 @@ export default class ThreadsDetail extends nue.Div {
 		this.boardSlug = null
 		this.boardName = null
 		this.threadId = null
+		this.threadRecordsCount = null
 		this.refThreadName = nue.ref(null)
 		this.refBoardNoName = nue.ref(null)
 

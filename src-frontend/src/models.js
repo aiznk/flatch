@@ -1,5 +1,6 @@
 import * as nue from './nue/nue.js'
 import { Cache } from './cache.js'
+import { genThreadTitle } from './utils.js'
 import { RecordContentParser } from './parsers.js'
 import { ValidationError, ParseError } from './excepts.js'
 
@@ -259,6 +260,16 @@ export class ThreadModel {
 		this.id = null
 		this.boardSlug = null
 		this.recordsCount = null
+	}
+
+	toTitle () {
+		if (this.subject && this.recordsCount) {
+			return genThreadTitle(this.subject, this.recordsCount)
+		} else if (this.subject) {
+			return this.subject
+		} else {
+			return '???'
+		}
 	}
 
 	parseSubject (subject /* Array<String, String> */) {

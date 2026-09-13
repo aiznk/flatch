@@ -2,13 +2,13 @@ import * as nue from '../nue/nue.js'
 import * as i18n from '../i18n.js'
 
 class ThreadsListItem extends nue.Li {
-	constructor (thread /* Thread */) {
+	constructor (thread /* ThreadModel */) {
 		super({ class: 'threads-list-item' })
 		this.thread = thread
 
 		let path = this.thread.toPath()
 		this.link = new nue.Link(
-			thread.subject,
+			thread.toTitle(),
 			{ path },
 			`/?path=${path}`,
 			{ class: 'link' },
@@ -51,7 +51,7 @@ export default class Threads extends nue.Div {
 		this.list.clear()
 	}
 
-	setThreads (threads /* Array<Thread> */) {
+	setThreads (threads /* Array<ThreadModel> */) {
 		for (let thread of threads) {
 			let item = new ThreadsListItem(thread)
 			this.list.add(item)

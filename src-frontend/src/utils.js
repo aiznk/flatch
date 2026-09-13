@@ -1,3 +1,7 @@
+export function genThreadTitle (threadName, recordsCount) {
+	return `${threadName} (${recordsCount})`
+}
+
 export function isDigit (c) {
 	return /[0-9]/.test(c)
 }
