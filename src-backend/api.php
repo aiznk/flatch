@@ -209,9 +209,13 @@ class Api {
 		$response = [];
 
 		$board_slug = $_GET['board_slug'] ?? null;
-
 		$board = new BoardModel();
-		$board->init($board_slug);
+
+		try {
+			$board->init($board_slug);
+		} catch (ValidationError $e) {
+			return $this->echo_exception($e);			
+		}
 
 		try {
 			$board->load_setting();

@@ -88,15 +88,14 @@ class BoardModel extends Model {
 
 class SubjectsModel extends Model {
 	public string $board_slug;
-	public array $subjects; /* Array<SubjectModel> */
+	public array $subjects = []; /* Array<SubjectModel> */
 
-	function open_stream ($board_slug) {
+	function open_stream (string $board_slug) {
 		if (!$this->is_valid_board_slug($board_slug)) {
 			throw new ValidationError("invalid board slug: $board_slug");
 		}
 
 		$this->board_slug = $board_slug;
-		$this->subjects = [];
 
 		try {
 			$subjects_path = gen_board_subjects_path($board_slug);
