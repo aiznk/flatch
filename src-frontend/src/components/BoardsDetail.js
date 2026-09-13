@@ -80,7 +80,14 @@ export default class BoardsDetail extends nue.Div {
 
 		for (let sub of subjects) {
 			let thread = new ThreadModel()			
-			thread.parseSubject(sub)
+
+			try {
+				thread.parseSubject(sub)
+			} catch (e) {
+				console.error(`${e}`)
+				continue
+			}
+
 			thread.boardSlug = this.board.slug
 			threads.push(thread)
 		}

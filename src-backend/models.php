@@ -62,14 +62,16 @@ class BoardModel extends Model {
 	}
 
 	function collect_thread_subjects () {
-		$board_dir = check_path(BOARDS_DIR .'/'. $this->slug);
-		$subject_path = check_path($board_dir .'/'. SUBJECTS_FILE_NAME); 
-
-		if (!file_exists($subject_path)) {
+		try {
+			$subjects_path = gen_board_subjects_path($this->slug);
+		} catch (ValidationError $e) {
+			throw $e;
+		}
+		if (!file_exists($subjects_path)) {
 			return [];
 		}
 
-		$fp = fopen($subject_path, "r");
+		$fp = fopen($subjects_path, "r");
 		if ($fp === false) {
 			throw new FileIOError('failed to open subject file');
 		}

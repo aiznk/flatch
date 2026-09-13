@@ -78,12 +78,21 @@ export default class Home extends nue.Div {
 
 		let data = await response.json()
 		this.boardNoName = data.board.no_name
-		this.threads = data.thread_subjects.map(subject => {
-			let thread = new ThreadModel()
-			thread.parseSubject(subject)
-			thread.boardSlug = this.boardSlug
-			return thread
-		})
+		this.threads = data.thread_subjects
+			.map(subject => {
+				let thread = new ThreadModel()
+
+				try {
+					thread.parseSubject(subject)
+				} catch (e) {
+					console.error(`${e}`)
+					return null
+				}
+
+				thread.boardSlug = this.boardSlug
+				return thread
+			})
+			.filter(thread => thread !== null)
 
 		await this.showMoreThreads()
 	}

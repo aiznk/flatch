@@ -1,6 +1,7 @@
 import * as nue from './nue/nue.js'
 import { Cache } from './cache.js'
 import { RecordContentParser } from './parsers.js'
+import { ValidationError, ParseError } from './excepts.js'
 
 export class MainModel {
 	constructor () {
@@ -257,12 +258,27 @@ export class ThreadModel {
 		this.subject = null
 		this.id = null
 		this.boardSlug = null
+		this.recordsCount = null
 	}
 
 	parseSubject (subject /* Array<String, String> */) {
+		if (subject.length < 2) {
+			throw new ValidationError("invalid subject length")
+		}
 		this.datFileName = subject[0]
 		this.subject = subject[1]
-		this.id = this.datFileName.split('.')[0]
+
+		this.id = parseInt(this.datFileName.split('.')[0])
+		if (isNaN(this.id)) {
+			throw new ParseError("invalid thread id: NaN")
+		}
+
+		if (subject.length >= 3) {
+			this.recordsCount = parseInt(subject[2])
+			if (isNaN(this.recordsCount)) {
+				this.recordsCount = null
+			}
+		}
 	}
 
 	toPath () {
