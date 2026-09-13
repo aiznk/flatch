@@ -73,7 +73,9 @@ button:focus-visible, input:focus-visible, textarea:focus-visible, .link:focus-v
 		overflow: hidden; border: 1px solid var(--border); border-radius: $radius; background: var(--surface); box-shadow: var(--shadow);
 		.left { overflow-y: auto; background: var(--surface-alt); }
 		.right { overflow-y: auto; padding: clamp($pad-y, 3vw, calc($pad-y * 2)); }
-		.navigation-panel { overflow-y: auto; padding: $pad-y calc($pad-x * 0.7); background: var(--surface-alt); color: var(--text-muted); font: .78rem $font-mono; }
+		.navigation-panel { display: flex; flex-direction: column; gap: .5rem; overflow-y: auto; padding: $pad-y calc($pad-x * 0.7); background: var(--surface-alt); color: var(--text-muted); font: .78rem $font-mono; }
+		.navigation-panel .thread-navigation-button { width: 100%; }
+		.navigation-panel .thread-navigation-button:disabled { cursor: not-allowed; opacity: .45; }
 	}
 }
 .app-footer { padding: calc($pad-y * 0.7) calc($pad-x * 0.88); background: var(--surface); border-top: 1px solid var(--border); color: var(--text-muted); font: .75rem $font-mono; text-align: center; }

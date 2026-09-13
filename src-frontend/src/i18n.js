@@ -75,3 +75,11 @@ export function threadDisplayTable () {
 export function datDroppedWarning () {
 	return get('このスレはdat落ちしています', 'This thread has been archived.')
 }
+
+export function previousThread () {
+	return get('前のスレッド', 'Previous thread')
+}
+
+export function nextThread () {
+	return get('次のスレッド', 'Next thread')
+}
