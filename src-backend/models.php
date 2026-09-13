@@ -127,11 +127,10 @@ class SubjectsModel extends Model {
 		$subjects = [];
 
 		foreach ($lines as $line) {
-			$toks = explode(DAT_LINE_SEP, trim($line));
 			$subject = new SubjectModel();
 
 			try {
-				$subject->set_array($toks);
+				$subject->parse_line($line);
 			} catch (ValueError $e) {
 				throw $e;
 			}
@@ -201,23 +200,48 @@ class SubjectsModel extends Model {
 class SubjectModel extends Model {
 	public int $thread_id;
 	public string $thread_name;
+	public ?int $records_count;
 
-	function init (int $thread_id, string $thread_name) {
+	function init (int $thread_id, string $thread_name, int $records_count=null) {
 		$this->thread_id = $thread_id;
 		$this->thread_name = $thread_name;
+		$this->records_count = $records_count;
+	}
+
+	function parse_line (string $line) {
+		$toks = explode(DAT_LINE_SEP, $line);
+
+		try {
+			$this->set_array($toks);
+		} catch (ValueError $e) {
+			throw $e;
+		}
 	}
 
 	function set_array (array $row) {
-		if (count($row) !== 2) {
+		if (count($row) < 2) {
 			throw new ValueError("invalid row length: ".count($row));
 		}
 
-		$this->thread_id = $row[0];
+		$this->thread_id = intval($row[0]);
+		if ($this->thread_id === 0) {
+			throw new ValueError("invalid thread id: 0");
+		}
+
 		$this->thread_name = $row[1];
+
+		if (isset($row[2]) && strlen($row[2])) {
+			$this->records_count = intval($row[2]);
+			if ($this->records_count === 0) {
+				throw new ValueError("invalid records count: 0");
+			}
+		} else {
+			$this->records_count = null;
+		}
 	}
 
 	function to_record_line () {
-		return implode(DAT_LINE_SEP, [$this->thread_id, $this->thread_name]) ."\n";
+		return implode(DAT_LINE_SEP, [$this->thread_id, $this->thread_name, $this->records_count]) ."\n";
 	}
 }
 
@@ -229,12 +253,22 @@ class ThreadModel extends Model {
 		if (!$this->is_valid_board_slug($board_slug)) {
 			throw new ValidationError("invalid board slug $board_slug");
 		}
-		if (intval($thread_id) === 0) {
-			throw new ValidationError("invalid thread id 0");
-		}
 
 		$this->board_slug = $board_slug;
+
 		$this->id = intval($thread_id);
+		if (intval($this->id) === 0) {
+			throw new ValidationError("invalid thread id 0");
+		}
+	}
+
+	function count_records () {
+		try {
+			$dat_path = gen_dat_path($this->board_slug, $this->id);
+		} catch (ValidationError $e) {
+			throw $e;
+		}
+		return count_file_lines($dat_path);
 	}
 
 	function create (string $board_slug, string $thread_name, string $name, string $email, string $content) {
@@ -252,6 +286,8 @@ class ThreadModel extends Model {
 		}
 
 		file_put_contents($dat_path, $record->to_record_line(), FILE_APPEND);
+
+		$records_count = count_file_lines($dat_path);
 
 		// subject
 		$subjects = new SubjectsModel();
@@ -279,7 +315,7 @@ class ThreadModel extends Model {
 		}
 
 		$subject = new SubjectModel();
-		$subject->init($this->id, $thread_name);
+		$subject->init($this->id, $thread_name, $records_count);
 
 		$subjects->shrink_tail(MAX_SUBJECTS_LEN);
 		$subjects->insert_at_first($subject);

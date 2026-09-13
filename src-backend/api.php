@@ -184,6 +184,13 @@ class Api {
 			}
 
 			$subject = $subjects->find_by_thread_id($thread_id);
+
+			try {
+				$subject->records_count = $thread->count_records();
+			} catch (ValidationError $e) {
+				return $this->echo_exception($e);
+			}
+
 			if (!is_null($subject)) {
 				$subjects->remove($subject);
 				$subjects->insert_at_first($subject);
